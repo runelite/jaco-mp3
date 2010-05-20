@@ -389,3 +389,38 @@ a:hover {
 	text-decoration: none;
 	color: #F90542;
 }
+
+
+
+.dlbutton {
+	margin: 2em 2em;
+	width: 300px;
+}
+
+.dlbutton a {
+	display: block;
+	color: #09700B;
+	height: 63px;
+	padding: 15px 15px 15px 60px;
+}
+
+.dlbutton a {
+	text-decoration: none;
+	background: transparent url(images/download-button.png) 0 0 no-repeat;
+}
+
+.dlbutton a:hover {
+	background-position: -300px 0;
+}
+
+.dlbutton span {
+	color: #09700B;
+	font-size: 1.3em;
+	font-weight: bold;
+	position: static;
+}
+
+.dlbutton span em {
+	font-weight: normal;
+	font-style: normal;
+}
