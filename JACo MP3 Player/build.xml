@@ -1,0 +1,85 @@
+<project default="main" basedir=".">
+
+
+
+	<property name="project.name" value="JACo MP3 Player" />
+	<property name="project.jar" value="jaco-mp3-player-0.9.2.jar" />
+
+	<property name="dist.dir" location="../.dist/${project.name}" />
+	<property name="dist.tmp.dir" location="${dist.dir}/tmp" />
+
+
+
+	<target name="main">
+
+
+
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}" />
+
+
+
+		<jar basedir="bin" destfile="${dist.dir}/${project.jar}" />
+
+
+
+		<delete dir="${dist.tmp.dir}" />
+		<mkdir dir="${dist.tmp.dir}" />
+		<mkdir dir="${dist.tmp.dir}/injars" />
+		<mkdir dir="${dist.tmp.dir}/libraryjars" />
+		<mkdir dir="${dist.tmp.dir}/outjars" />
+
+		<move todir="${dist.tmp.dir}/injars">
+			<fileset file="${dist.dir}/${project.jar}" />
+		</move>
+
+		<copy todir="${dist.tmp.dir}/libraryjars">
+			<fileset dir="lib" />
+		</copy>
+
+		<copy file="obfuscator.pro" tofile="obfuscator.pro.tmp" />
+
+		<replace file="obfuscator.pro.tmp" token="xXx_dir_xXx" value="${dist.tmp.dir}" />
+
+		<exec executable="java.exe">
+			<arg value="-jar" />
+			<arg value="../../Programs/ProGuard/lib/proguard.jar" />
+			<arg value="@obfuscator.pro.tmp" />
+		</exec>
+
+		<delete file="obfuscator.pro.tmp" />
+
+		<move todir="${dist.dir}">
+			<fileset dir="${dist.tmp.dir}/outjars" />
+			<fileset dir="${dist.tmp.dir}/libraryjars" />
+		</move>
+
+		<delete dir="${dist.tmp.dir}" />
+
+
+
+		<copy file="index.html" todir="${dist.dir}" />
+
+		<replace file="${dist.dir}/index.html" token="_xXx_name_xXx_" value="JACo_MP3_Player" />
+
+		<replace file="${dist.dir}/index.html" token="_xXx_code_xXx_" value="jaco.mp3.player.MP3PlayerApplet.class" />
+		<replace file="${dist.dir}/index.html" token="_xXx_archive_xXx_" value="${project.jar}" />
+
+		<replace file="${dist.dir}/index.html" token="_xXx_boxbgcolor_xXx_" value="0xFFFFFF" />
+		<replace file="${dist.dir}/index.html" token="_xXx_boxfgcolor_xXx_" value="0x000000" />
+
+
+
+		<delete dir="dist" />
+		<mkdir dir="dist" />
+
+		<copy todir="dist">
+			<fileset file="${dist.dir}/${project.jar}" />
+		</copy>
+
+
+	</target>
+
+
+
+</project>

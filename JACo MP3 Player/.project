@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>JACo MP3 Player</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>src JACo Image</name>
+			<type>2</type>
+			<location>C:/Work/Workspace JACo/JACo Image/src</location>
+		</link>
+		<link>
+			<name>src JACo MP3 Player Resources</name>
+			<type>2</type>
+			<location>C:/Work/Workspace JACo/JACo MP3 Decoder/src</location>
+		</link>
+	</linkedResources>
+</projectDescription>
