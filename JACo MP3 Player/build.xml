@@ -70,14 +70,6 @@
 
 
 
-		<delete dir="dist" />
-		<mkdir dir="dist" />
-
-		<copy todir="dist">
-			<fileset file="${dist.dir}/${project.jar}" />
-		</copy>
-
-
 	</target>
 
 
