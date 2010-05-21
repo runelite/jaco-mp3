@@ -6,6 +6,7 @@
 <meta name="keywords" content="java mp3 player" />
 <meta name="description" content="JACo MP3 Player is a cross platform mp3 player developed entirely in Java. Features: very low CPU usage (~2%), incredible small library (~90KB), doesn't need JMF, easy to integrate in any application, easy to integrate in any web page (as applet)." />
 <link href="stylesheet.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 </head>
 <body>
 <div id="header">
@@ -31,117 +32,64 @@
 						<div class="post-bgbtm">
 							<div class="entry">
 
-						        <object
-						            
-						            classid  = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
-						            codebase = "."
-						            type     = "application/x-java-applet"
-						            
-						            name                                  = "JACo_MP3_Player"
-						            width                                 = "86"
-						            height                                = "16" >
-						            
-						            <param name = "code"            value = "jaco.mp3.player.MP3PlayerApplet.class" />
-						            <param name = "archive"         value = "jars/jaco-mp3-player-0.9.2.jar" />
-						            
-						            <param name = "boxbgcolor"      value = "0xFFFFFF" />
-						            <param name = "boxfgcolor"      value = "0x000000" />
-						            
-						            <param name = "compact"         value = "truex" />
-						            <param name = "playlist"        value = "mp3s/01.mp3, mp3s/02.mp3, mp3s/03.mp3" />
-						            
-						            <param name = "separate_jvm"    value = "true" />
-						            <param name = "codebase_lookup" value = "false" />
-						            
-						            <param name = "type"            value = "application/x-java-applet;version=1.6" />
-						            <param name = "scriptable"      value = "false" />
-						            
-							        <object
-							            
-							            classid  = "java:jaco.mp3.player.MP3PlayerApplet.class"
-							            codebase = "."
-							            type     = "application/x-java-applet"
-							            
-							            name                                  = "JACo_MP3_Player"
-							            width                                 = "86"
-							            height                                = "16" >
-							            
-							            <param name = "code"            value = "jaco.mp3.player.MP3PlayerApplet.class" />
-							            <param name = "archive"         value = "jars/jaco-mp3-player-0.9.2.jar" />
-							            
-							            <param name = "boxbgcolor"      value = "0xFFFFFF" />
-							            <param name = "boxfgcolor"      value = "0x000000" />
-							            
-							            <param name = "compact"         value = "truex" />
-							            <param name = "playlist"        value = "mp3s/01.mp3, mp3s/02.mp3, mp3s/03.mp3" />
-							            
-							            <param name = "separate_jvm"    value = "true" />
-							            <param name = "codebase_lookup" value = "false" />
-							            
-							            <param name = "type"            value = "application/x-java-applet;version=1.6" />
-							            <param name = "scriptable"      value = "false" />
-							            
-							        </object>
-						            
-						        </object>
+								<script type="text/javascript">
+								
+								    var attributes = {
+								
+								            code            : "jaco.mp3.player.MP3PlayerApplet.class",
+								            archive         : "jars/jaco-mp3-player.jar",
+								            width           : "86",
+								            height          : "16"
+								        };
+								
+								    var parameters = {
+								
+								            separate_jvm    : "true",
+								            codebase_lookup : "true",
+								
+								            background      : "0xFFFFFF",
+								            compact         : "false",
+								            playlist        : "mp3s/01.mp3, mp3s/02.mp3, mp3s/03.mp3"
+								        };
+								
+								    var version = "1.6";
+								
+								    deployJava.runApplet(attributes, parameters, version);
+								
+								</script>
+								
 						        <br />
 						        <br />
 						        <br />
-						        <object
-						            
-						            classid  = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
-						            codebase = "."
-						            type     = "application/x-java-applet"
-						            
-						            name                                  = "JACo_MP3_Player"
-						            width                                 = "86"
-						            height                                = "16" >
-						            
-						            <param name = "code"            value = "jaco.mp3.player.MP3PlayerApplet.class" />
-						            <param name = "archive"         value = "jars/jaco-mp3-player-0.9.2.jar" />
-						            
-						            <param name = "boxbgcolor"      value = "0xFFFFFF" />
-						            <param name = "boxfgcolor"      value = "0x000000" />
-						            
-						            <param name = "compact"         value = "true" />
-						            <param name = "playlist"        value = "mp3s/01.mp3, mp3s/02.mp3, mp3s/03.mp3" />
-						            
-						            <param name = "separate_jvm"    value = "true" />
-						            <param name = "codebase_lookup" value = "false" />
-						            
-						            <param name = "type"            value = "application/x-java-applet;version=1.6" />
-						            <param name = "scriptable"      value = "false" />
-						            
-							        <object
-							            
-							            classid  = "java:jaco.mp3.player.MP3PlayerApplet.class"
-							            codebase = "."
-							            type     = "application/x-java-applet"
-							            
-							            name                                  = "JACo_MP3_Player"
-							            width                                 = "86"
-							            height                                = "16" >
-							            
-							            <param name = "code"            value = "jaco.mp3.player.MP3PlayerApplet.class" />
-							            <param name = "archive"         value = "jars/jaco-mp3-player-0.9.2.jar" />
-							            
-							            <param name = "boxbgcolor"      value = "0xFFFFFF" />
-							            <param name = "boxfgcolor"      value = "0x000000" />
-							            
-							            <param name = "compact"         value = "true" />
-							            <param name = "playlist"        value = "mp3s/01.mp3, mp3s/02.mp3, mp3s/03.mp3" />
-							            
-							            <param name = "separate_jvm"    value = "true" />
-							            <param name = "codebase_lookup" value = "false" />
-							            
-							            <param name = "type"            value = "application/x-java-applet;version=1.6" />
-							            <param name = "scriptable"      value = "false" />
-							            
-							        </object>
-						            
-						        </object>
-						        <br />
+
+								<script type="text/javascript">
+								
+								    var attributes = {
+								
+								            code            : "jaco.mp3.player.MP3PlayerApplet.class",
+								            archive         : "jars/jaco-mp3-player.jar",
+								            width           : "86",
+								            height          : "16"
+								        };
+								
+								    var parameters = {
+								
+								            separate_jvm    : "true",
+								            codebase_lookup : "true",
+								
+								            background      : "0xFFFFFF",
+								            compact         : "true",
+								            playlist        : "mp3s/01.mp3, mp3s/02.mp3, mp3s/03.mp3"
+								        };
+								
+								    var version = "1.6";
+								
+								    deployJava.runApplet(attributes, parameters, version);
+								
+								</script>
+
 						        
+						        <br />
 							</div>
 						</div>
 					</div>
@@ -155,9 +103,9 @@
 								<h2>Links</h2>
 								<ul>
 									<li><a href="http://sourceforge.net/projects/jacomp3player/">Project detail and discuss</a></li>
-									<li><a href="http://sourceforge.net/tracker/?group_id=322559&atid=1355357">Bugs</a></li>
-									<li><a href="http://sourceforge.net/tracker/?group_id=322559&atid=1355358">Support Requests</a></li>
-									<li><a href="http://sourceforge.net/tracker/?group_id=322559&atid=1355360">Feature Requests</a></li>
+									<li><a href="http://sourceforge.net/tracker/?group_id=322559&amp;atid=1355357">Bugs</a></li>
+									<li><a href="http://sourceforge.net/tracker/?group_id=322559&amp;atid=1355358">Support Requests</a></li>
+									<li><a href="http://sourceforge.net/tracker/?group_id=322559&amp;atid=1355360">Feature Requests</a></li>
 								</ul>
 							</li>
 							<li>
@@ -196,7 +144,7 @@
 <div id="footer-wrapper">
 	<div id="footer">
 		<p id="legal">Copyright &copy; 2007 Vertebrate . All Rights Reserved. Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
-		<p id="links"><a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
+		<p id="links"><a href="http://p.sf.net/sourceforge/terms">Terms of Use</a> | <a href="http://p.sf.net/sourceforge/privacy">Privacy Policy</a></p>
 	</div>
 </div>
 </body>
