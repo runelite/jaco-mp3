@@ -3,7 +3,7 @@
 
 
 	<property name="project.name" value="JACo MP3 Player" />
-	<property name="project.jar" value="jaco-mp3-player-0.9.2.jar" />
+	<property name="project.jar" value="jaco-mp3-player-0.9.3.jar" />
 
 	<property name="dist.dir" location="../.dist/${project.name}" />
 	<property name="dist.tmp.dir" location="${dist.dir}/tmp" />
