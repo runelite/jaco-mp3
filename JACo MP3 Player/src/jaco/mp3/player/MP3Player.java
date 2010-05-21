@@ -1,11 +1,11 @@
 package jaco.mp3.player;
 
-import jaco.mp3.decoder.decoder.Bitstream;
-import jaco.mp3.decoder.decoder.Decoder;
-import jaco.mp3.decoder.decoder.Header;
-import jaco.mp3.decoder.decoder.SampleBuffer;
-import jaco.mp3.decoder.player.JavaSoundAudioDevice;
 import jaco.mp3.player.plaf.MP3PlayerUI;
+import jaco.mp3.resources.Decoder;
+import jaco.mp3.resources.Frame;
+import jaco.mp3.resources.SampleBuffer;
+import jaco.mp3.resources.SoundDevice;
+import jaco.mp3.resources.SoundStream;
 
 import java.io.File;
 import java.net.URL;
@@ -91,11 +91,11 @@ public class MP3Player extends JPanel {
 
         Decoder decoder = new Decoder();
 
-        Bitstream stream;
-        JavaSoundAudioDevice device;
+        SoundStream stream;
+        SoundDevice device;
 
         try {
-          stream = new Bitstream(playList.get(playIndex).openStream());
+          stream = new SoundStream(playList.get(playIndex).openStream());
         } catch (Exception e) {
           stream = null;
           // log.error("error opening the stream", e);
@@ -105,7 +105,7 @@ public class MP3Player extends JPanel {
         if (stream != null) {
 
           try {
-            device = new JavaSoundAudioDevice();
+            device = new SoundDevice();
             device.open(decoder);
           } catch (Exception e) {
             device = null;
@@ -131,13 +131,13 @@ public class MP3Player extends JPanel {
                   continue;
                 }
 
-                Header h = stream.readFrame();
+                Frame frame = stream.readFrame();
 
-                if (h == null) {
+                if (frame == null) {
                   break;
                 }
 
-                SampleBuffer output = (SampleBuffer) decoder.decodeFrame(h, stream);
+                SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frame, stream);
 
                 device.write(output.getBuffer(), 0, output.getBufferLength());
 
