@@ -12,13 +12,13 @@ public class MP3PlayerApplet extends JApplet {
   /** serialVersionUID */
   private static final long serialVersionUID = 46146126474303823L;
 
-  // private MP3Player player;
-
   @Override
   public void init() {
     try {
 
-      getContentPane().setBackground(Color.decode(getParameter("boxbgcolor")));
+      try {
+        getContentPane().setBackground(Color.decode(getParameter("background")));
+      } catch (Exception e) {}
 
       if ("true".equals(getParameter("compact"))) {
         MP3Player.setDefaultUI(MP3PlayerUICompact.class);
@@ -37,18 +37,6 @@ public class MP3PlayerApplet extends JApplet {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  @Override
-  public void stop() {
-  // if (player != null) {
-  // player.stop();
-  // }
-  }
-
-  @Override
-  public void destroy() {
-  // player = null;
   }
 
 }
