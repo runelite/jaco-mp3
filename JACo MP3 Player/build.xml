@@ -33,10 +33,6 @@
 			<fileset file="${dist.dir}/${project.jar}" />
 		</move>
 
-		<copy todir="${dist.tmp.dir}/libraryjars">
-			<fileset dir="lib" />
-		</copy>
-
 		<copy file="obfuscator.pro" tofile="obfuscator.pro.tmp" />
 
 		<replace file="obfuscator.pro.tmp" token="xXx_dir_xXx" value="${dist.tmp.dir}" />

@@ -1,11 +1,11 @@
 package jaco.mp3.player;
 
 import jaco.mp3.player.plaf.MP3PlayerUI;
-import jaco.mp3.resources.Decoder;
-import jaco.mp3.resources.Frame;
-import jaco.mp3.resources.SampleBuffer;
-import jaco.mp3.resources.SoundDevice;
-import jaco.mp3.resources.SoundStream;
+import jaco.mp3.player.resources.Decoder;
+import jaco.mp3.player.resources.Frame;
+import jaco.mp3.player.resources.SampleBuffer;
+import jaco.mp3.player.resources.SoundDevice;
+import jaco.mp3.player.resources.SoundStream;
 
 import java.io.File;
 import java.net.URL;
