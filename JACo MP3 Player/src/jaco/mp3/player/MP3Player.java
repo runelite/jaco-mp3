@@ -17,6 +17,18 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+/**
+ * Java MP3 Player
+ * 
+ * <pre>
+ * new MP3Player(new File(&quot;test.mp3&quot;)).play();
+ * </pre>
+ * 
+ * @version 1.35, May 26, 2010
+ * @author Cristian Sulea (<a
+ *         href=http://cristiansulea.entrust.ro/>http://cristiansulea
+ *         .entrust.ro</a>)
+ */
 @SuppressWarnings("serial")
 public class MP3Player extends JPanel {
 
@@ -68,6 +80,17 @@ public class MP3Player extends JPanel {
     }
   }
 
+  /**
+   * Causes this player to start playing (or resume if the player is paused).
+   * 
+   * This is a non blocking method, with the result that two threads are running
+   * concurrently: the current thread (which returns from the call to the
+   * {@link #play()} method) and another thread (which executes the actual play:
+   * stream read/decode, audio data write).
+   * 
+   * @see #pause()
+   * @see #stop()
+   */
   public synchronized void play() {
 
     if (listeners != null) {
@@ -181,6 +204,11 @@ public class MP3Player extends JPanel {
     thread.start();
   }
 
+  /**
+   * Forces the player to pause playing.
+   * 
+   * @see #play()
+   */
   public synchronized void pause() {
 
     if (listeners != null) {
@@ -192,6 +220,11 @@ public class MP3Player extends JPanel {
     isPaused = true;
   }
 
+  /**
+   * Forces the player to stop playing.
+   * 
+   * @see #play()
+   */
   public synchronized void stop() {
 
     if (listeners != null) {
@@ -223,6 +256,12 @@ public class MP3Player extends JPanel {
     isStopped = true;
   }
 
+  /**
+   * Forces the player to play next mp3 in the play list (or random if shuffle
+   * is turned on).
+   * 
+   * @see #play()
+   */
   public synchronized void skipForward() {
 
     if (shuffle) {
@@ -243,6 +282,12 @@ public class MP3Player extends JPanel {
     }
   }
 
+  /**
+   * Forces the player to play previous mp3 in the play list (or random if
+   * shuffle is turned on).
+   * 
+   * @see #play()
+   */
   public synchronized void skipBackward() {
 
     if (shuffle) {
@@ -263,16 +308,34 @@ public class MP3Player extends JPanel {
     }
   }
 
+  /**
+   * Determines whether this player is paused.
+   * 
+   * @return true if the player is paused, false otherwise
+   * 
+   * @see #pause()
+   */
   public boolean isPaused() {
     return isPaused;
   }
 
+  /**
+   * Determines whether this player is stopped.
+   * 
+   * @return true if the player is stopped, false otherwise
+   * 
+   * @see #stop()
+   */
   public boolean isStopped() {
     return isStopped;
   }
 
-  //
-
+  /**
+   * Adds a {@link MP3PlayerListener} to the player.
+   * 
+   * @param listener
+   *          the listener to be added
+   */
   public synchronized void addMP3PlayerListener(MP3PlayerListener listener) {
     if (listeners == null) {
       listeners = new ArrayList<MP3PlayerListener>();
@@ -280,20 +343,47 @@ public class MP3Player extends JPanel {
     listeners.add(listener);
   }
 
+  /**
+   * Removes a {@link MP3PlayerListener} from the player.
+   * 
+   * @param listener
+   *          the listener to be removed
+   */
   public synchronized void removeMP3PlayerListener(MP3PlayerListener listener) {
     listeners.remove(listener);
   }
 
+  /**
+   * Removes all of the {@link MP3PlayerListener} listeners from this player.
+   */
   public synchronized void removeAllMP3PlayerListeners() {
     listeners.clear();
   }
 
-  //
-
+  /**
+   * Appends the specified mp3 (as {@link URL} object) to the end of the play
+   * list.
+   * 
+   * @param mp3
+   *          the mp3 to be added
+   * 
+   * @see #addToPlayList(File)
+   * @see #getPlayList()
+   */
   public void addToPlayList(URL mp3) {
     this.playList.add(mp3);
   }
 
+  /**
+   * Appends the specified mp3 (as {@link File} object) to the end of the play
+   * list.
+   * 
+   * @param mp3
+   *          the mp3 to be added
+   * 
+   * @see #addToPlayList(URL)
+   * @see #getPlayList()
+   */
   public void addToPlayList(File mp3) {
     try {
       this.playList.add(mp3.toURI().toURL());
@@ -302,24 +392,65 @@ public class MP3Player extends JPanel {
     }
   }
 
+  /**
+   * Returns the current play list.
+   * 
+   * @return the current play list as {@link URL} objects
+   * 
+   * @see #addToPlayList(URL)
+   * @see #addToPlayList(File)
+   */
   public List<URL> getPlayList() {
     return playList;
   }
 
-  //
-
+  /**
+   * Returns the shuffle state of the player. True if the shuffle is on, false
+   * if it's not.
+   * 
+   * @return true if the shuffle is on, false otherwise
+   * 
+   * @see #setShuffle(boolean)
+   */
   public boolean isShuffle() {
     return shuffle;
   }
 
+  /**
+   * When you turn on shuffle, the next mp3 to play will be randomly chosen from
+   * the play list.
+   * 
+   * @param shuffle
+   *          true if shuffle should be turned on, or false for turning off
+   * 
+   * @see #isShuffle()
+   */
   public void setShuffle(boolean shuffle) {
     this.shuffle = shuffle;
   }
 
+  /**
+   * Returns the repeat state of the player. True if the repeat is on, false if
+   * it's not.
+   * 
+   * @return true if the repeat is on, false otherwise
+   * 
+   * @see #setRepeat(boolean)
+   */
   public boolean isRepeat() {
     return repeat;
   }
 
+  /**
+   * When you turn on repeat, the player will practically never stop. After the
+   * last mp3 from the play list will finish, the first will be automatically
+   * played, or a random one if shuffle is on.
+   * 
+   * @param repeat
+   *          true if repeat should be turned on, or false for turning off
+   * 
+   * @see #isRepeat()
+   */
   public void setRepeat(boolean repeat) {
     this.repeat = repeat;
   }

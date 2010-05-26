@@ -234,10 +234,6 @@ a:hover {
 .post .entry {
 }
 
-.post .news {
-	background: url(images/img10.jpg) repeat-x left bottom;
-}
-
 .post img {
 	float: left;
 	padding: 15px 0px;
@@ -424,3 +420,4 @@ a:hover {
 	font-weight: normal;
 	font-style: normal;
 }
+
