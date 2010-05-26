@@ -4,9 +4,9 @@ package jaco.mp3.player;
  * The listener interface for handling player events.
  * 
  * @version 1.02, May 26, 2010
- * @author Cristian Sulea (<a
+ * @author Cristian Sulea ( <a
  *         href=http://cristiansulea.entrust.ro/>http://cristiansulea
- *         .entrust.ro</a>)
+ *         .entrust.ro</a> )
  */
 public interface MP3PlayerListener {
 

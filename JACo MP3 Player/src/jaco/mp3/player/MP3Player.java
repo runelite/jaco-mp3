@@ -25,9 +25,9 @@ import javax.swing.UIManager;
  * </pre>
  * 
  * @version 1.35, May 26, 2010
- * @author Cristian Sulea (<a
+ * @author Cristian Sulea ( <a
  *         href=http://cristiansulea.entrust.ro/>http://cristiansulea
- *         .entrust.ro</a>)
+ *         .entrust.ro</a> )
  */
 @SuppressWarnings("serial")
 public class MP3Player extends JPanel {

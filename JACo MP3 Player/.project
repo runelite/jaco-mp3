@@ -20,10 +20,5 @@
 			<type>2</type>
 			<location>C:/Work/Workspace JACo/JACo Image/src</location>
 		</link>
-		<link>
-			<name>src JACo MP3 Player Resources</name>
-			<type>2</type>
-			<location>C:/Work/Workspace JACo/JACo MP3 Player Resources/src</location>
-		</link>
 	</linkedResources>
 </projectDescription>
