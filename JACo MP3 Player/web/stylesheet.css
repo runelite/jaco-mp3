@@ -70,7 +70,6 @@ a:hover {
 
 #logo {
 	float: left;
-	width: 370px;
 	height: 76px;
 	margin: 0px;
 	padding: 15px 0px 0px 30px;
@@ -106,7 +105,7 @@ a:hover {
 
 #menu {
 	float: right;
-	width: 492px;
+	width: 510px;
 	height: 90px;
 }
 

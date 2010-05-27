@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) <2010> Cristian Sulea ( http://cristiansulea.entrust.ro )
+ * 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package jaco.mp3.player;
 
 import jaco.mp3.player.plaf.MP3PlayerUI;
@@ -24,10 +41,8 @@ import javax.swing.UIManager;
  * new MP3Player(new File(&quot;test.mp3&quot;)).play();
  * </pre>
  * 
- * @version 1.35, May 26, 2010
- * @author Cristian Sulea ( <a
- *         href=http://cristiansulea.entrust.ro/>http://cristiansulea
- *         .entrust.ro</a> )
+ * @version 1.36, May 27, 2010
+ * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 @SuppressWarnings("serial")
 public class MP3Player extends JPanel {
