@@ -10,7 +10,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -52,16 +54,22 @@ public class MP3PlayerUI extends BasicPanelUI {
 
     player.setOpaque(false);
 
-    playButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPlay.png")));
-    pauseButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPause.png")));
-    stopButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerStop.png")));
-    skipBackwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipBackward.png")));
-    skipForwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipForward.png")));
+//    playButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPlay.png")));
+//    pauseButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPause.png")));
+//    stopButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerStop.png")));
+//    skipBackwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipBackward.png")));
+//    skipForwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipForward.png")));
     // shuffleButton = new
     // PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerShuffle.png")));
     // repeatButton = new
     // PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerRepeat.png")));
 
+    playButton = new PlayerButton("mp3PlayerPlay");
+    pauseButton = new PlayerButton("mp3PlayerPause");
+    stopButton = new PlayerButton("mp3PlayerStop");
+    skipBackwardButton = new PlayerButton("mp3PlayerSkipBackward");
+    skipForwardButton = new PlayerButton("mp3PlayerSkipForward");
+    
     ActionListener actionListener = new ActionListener() {
 
       @Override
@@ -111,6 +119,32 @@ public class MP3PlayerUI extends BasicPanelUI {
       BufferedImage image1 = ImageUtils.addBrightness(image, 0.05f);
       BufferedImage image2 = ImageUtils.addDarkness(image, 0.05f);
 
+      setIcon(IconUtils.create(image));
+      setRolloverIcon(IconUtils.create(image1));
+      setPressedIcon(IconUtils.create(image2));
+
+      setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+      setBorder(BorderFactory.createEmptyBorder());
+      setMargin(new Insets(0, 0, 0, 0));
+      setContentAreaFilled(false);
+      setFocusable(false);
+      setFocusPainted(false);
+    }
+    
+    private PlayerButton(String imageName) {
+
+      BufferedImage image = ImageUtils.create(getClass().getResource("resources/" + imageName + ".png"));
+      BufferedImage image1 = ImageUtils.addBrightness(image, 0.05f);
+      BufferedImage image2 = ImageUtils.addDarkness(image, 0.05f);
+
+      try {
+        ImageIO.write(image, "png", new File(imageName + ".png"));
+        ImageIO.write(image1, "png", new File(imageName + "Rollover.png"));
+        ImageIO.write(image2, "png", new File(imageName + "Pressed.png"));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      
       setIcon(IconUtils.create(image));
       setRolloverIcon(IconUtils.create(image1));
       setPressedIcon(IconUtils.create(image2));
