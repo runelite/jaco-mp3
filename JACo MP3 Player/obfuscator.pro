@@ -23,6 +23,8 @@
 
 
 
+-repackageclasses  jaco.mp3.player
+
 -keep public class jaco.mp3.player.MP3Player {
 	public *;
 }
