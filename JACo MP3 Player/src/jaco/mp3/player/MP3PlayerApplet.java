@@ -19,6 +19,7 @@ package jaco.mp3.player;
 
 import jaco.mp3.player.plaf.MP3PlayerUICompact;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.net.URL;
 
@@ -70,6 +71,19 @@ public class MP3PlayerApplet extends JApplet {
   @Override
   public void init() {
     try {
+      javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          createGUI();
+        }
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void createGUI() {
+
+    try {
 
       try {
         getContentPane().setBackground(Color.decode(getParameter("background")));
@@ -87,7 +101,7 @@ public class MP3PlayerApplet extends JApplet {
         player.addToPlayList(new URL(getCodeBase() + mp3.trim()));
       }
 
-      getContentPane().add(player);
+      getContentPane().add(player, BorderLayout.CENTER);
 
     } catch (Exception e) {
       e.printStackTrace();
