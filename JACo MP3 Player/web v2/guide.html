@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	
+	<link type="text/css" href="stylesheet.css" rel="stylesheet" />
+	
+	<script type="text/javascript" src="external.js"></script><script type="text/javascript" src="applet.js"></script>
+	
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	
+	<meta http-equiv="cache-control" content="no-cache, no-store" />
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="expires" content="-1" />
+	
+	<meta name="google-site-verification" content="xXx" />
+	
+	<meta name="author" content="Cristian Sulea ( http://cristiansulea.entrust.ro )" />
+	<meta name="copyright" content="Cristian Sulea ( http://cristiansulea.entrust.ro )" />
+	
+	<meta name="keywords" content="java image photo gallery" />
+	<meta name="description" content="" />
+	
+	<title>JACo Gallery ( java image/photo gallery ) ( Users guide )</title>
+	
+</head>
+
+<body>
+
+<div id="header-wrapper">
+	<div id="header">
+		<div id="logo">
+			<h1>JACo Gallery</h1>
+			<a href="http://jaco.sourceforge.net/">Java Application Core</a>
+		</div>
+		<div id="menu">
+			<ul>
+				<li><a href="index.html">Overview</a></li>
+				<li><a href="demo.html">Demo</a></li>
+				<li class="active"><a href="guide.html">Users guide</a></li>
+				<li><a href="download.html">Download</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="page">
+	
+	<div id="content">
+		
+		<div class="post">
+			<div class="post-bgtop">
+				<div class="post-bgbtm">
+					<h2>
+						The Configuration File
+					</h2>
+					<pre style="font-size: 11px;">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;gallery background=&quot;FFFFFF&quot; foreground=&quot;000000&quot; font=&quot;Tahoma plain 11&quot;&gt;
+
+  &lt;album folder=&quot;beauties&quot; icon=&quot;lotus.jpg&quot; title=&quot;Beauties&quot;&gt;
+    &lt;images&gt;
+      &lt;image file=&quot;flowing-rock.jpg&quot; title=&quot;Flowing Rock&quot; /&gt;
+      &lt;image file=&quot;grass-blades.jpg&quot; title=&quot;Grass Blades&quot; /&gt;
+      &lt;image file=&quot;ladybug.jpg&quot; title=&quot;Lady Bug&quot; /&gt;
+      &lt;image file=&quot;lightning.jpg&quot; title=&quot;Lightning&quot; /&gt;
+      &lt;image file=&quot;lotus.jpg&quot; title=&quot;Lotus&quot; /&gt;
+      &lt;image file=&quot;mojave.jpg&quot; title=&quot;Mojave&quot; /&gt;
+      &lt;image file=&quot;pier.jpg&quot; title=&quot;Pier&quot; /&gt;
+      &lt;image file=&quot;sea-mist.jpg&quot; title=&quot;Sea Mist&quot; /&gt;
+      &lt;image file=&quot;stones.jpg&quot; title=&quot;Stones&quot; /&gt;
+    &lt;/images&gt;
+  &lt;/album&gt;
+
+  &lt;album folder=&quot;parrots&quot; icon=&quot;02.jpg&quot; title=&quot;Parrots&quot;&gt;
+    &lt;images&gt;
+      &lt;image file=&quot;01.jpg&quot; title=&quot;Strange parrot&quot; /&gt;
+      &lt;image file=&quot;02.jpg&quot; title=&quot;Blue parrot&quot; /&gt;
+      &lt;image file=&quot;03.jpg&quot; title=&quot;Red parrot&quot; /&gt;
+      &lt;image file=&quot;04.jpg&quot; title=&quot;is this a parrot?&quot; /&gt;
+    &lt;/images&gt;
+  &lt;/album&gt;
+
+&lt;/gallery&gt;
+					</pre>
+				</div>
+			</div>
+		</div>
+		
+		<div class="post">
+			<div class="post-bgtop">
+				<div class="post-bgbtm">
+					<h2>
+						The Applet
+					</h2>
+					<pre style="font-size: 11px;">
+&lt;script type=&quot;text/javascript&quot; src=&quot;applet.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  applet(
+    'false',
+    '400',
+    '276',
+    'jaco.gallery.GalleryApplet.class',
+    'jaco-gallery-0.9.1.jar',
+    {
+        galleryFolder : 'gallery',
+        galleryConfig : 'parrots.xml',
+        galleryTheme  : 'BASIC',
+    });
+&lt;/script&gt;
+					</pre>
+				</div>
+			</div>
+		</div>
+		
+		<div class="post">
+			<div class="post-bgtop">
+				<div class="post-bgbtm">
+					<h2>
+						The Component
+					</h2>
+					<pre style="font-size: 11px;">
+File galleryFolder = new File(&quot;gallery&quot;);
+
+Gallery gallery = new Gallery(galleryFolder);
+
+//
+
+JFrame frame = new JFrame(&quot;JACo Gallery&quot;);
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.getContentPane().add(gallery);
+frame.setSize(600, 400);
+frame.setLocationRelativeTo(null);
+frame.setVisible(true);
+					</pre>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+		
+	<div id="sidebar">
+		<div id="sidebar-bgtop">
+			<div id="sidebar-bgbtm">
+				
+				<h2>Support</h2>
+				<ul>
+					<li><a rel="external" href="http://sourceforge.net/tracker/?group_id=324783&amp;atid=1364010">Bugs</a></li>
+					<li><a rel="external" href="http://sourceforge.net/tracker/?group_id=324783&amp;atid=1364011">Support Requests</a></li>
+					<li><a rel="external" href="http://sourceforge.net/tracker/?group_id=324783&amp;atid=1364013">Feature Requests</a></li>
+				</ul>
+				
+				<h2>Hosted on</h2>
+				<ul>
+					<li>
+						<a rel="external" href="http://sourceforge.net/projects/jacogallery/">
+							<img width="120" height="30" style="border:0"
+								src="http://sflogo.sourceforge.net/sflogo.php?group_id=324783&amp;type=13"
+								alt="SourceForge.net" />
+						</a>									
+					</li>
+				</ul>
+				
+				<h2>W3C Validation</h2>
+				<ul>
+					<li>
+						<a rel="external" href="http://validator.w3.org/check?uri=referer">
+							<img style="border:0;width:88px;height:31px" src="images/valid-xhtml10.png" alt="Valid XHTML 1.0 Strict!" />
+						</a>									
+					</li>
+					<li>
+						<a rel="external" href="http://jigsaw.w3.org/css-validator/check/referer">
+							<img style="border:0;width:88px;height:31px" src="images/vcss.gif" alt="Valid CSS!" />
+						</a>
+					</li>
+				</ul>
+				
+			</div>
+		</div>
+	</div>
+	<div style="clear: both; height: 1px"></div>
+</div>
+
+<div id="footer-wrapper">
+	<div id="footer">
+		<p>Copyright &copy; 2010 Cristian Sulea ( <a rel="external" href="http://cristiansulea.entrust.ro/">http://cristiansulea.entrust.ro</a> )</p>
+	</div>
+</div>
+
+</body>
+</html>
