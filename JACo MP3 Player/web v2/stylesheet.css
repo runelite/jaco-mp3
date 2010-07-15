@@ -37,7 +37,7 @@ h3 {
 
 a {
 	text-decoration: underline;
-	color: #757E82;
+	color: #F40C42;
 	font-size: 11px;
 	font-style: normal;
 }
@@ -154,6 +154,13 @@ p {
 #sidebar li a {
 	background: url(images/img11.jpg) no-repeat left 3px;
 	padding-left: 20px;
+	text-decoration: underline;
+	color: #757E82;
+}
+
+#sidebar li a:hover {
+	text-decoration: none;
+	color: #F40C42;
 }
 
 #footer-wrapper {
