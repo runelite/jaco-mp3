@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src JACo Image</name>
-			<type>2</type>
-			<location>C:/Work/Workspace JACo/JACo Image/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>
