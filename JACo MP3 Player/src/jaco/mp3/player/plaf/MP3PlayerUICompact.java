@@ -46,121 +46,121 @@ import javax.swing.plaf.ComponentUI;
  */
 public class MP3PlayerUICompact extends MP3PlayerUI {
 
-  public static ComponentUI createUI(JComponent c) {
-    return new MP3PlayerUICompact();
-  }
+	public static ComponentUI createUI(JComponent c) {
+		return new MP3PlayerUICompact();
+	}
 
-  //
+	//
 
-  private JButton playerButton;
+	private JButton playerButton;
 
-  protected void installUI(final MP3Player player) {
+	protected void installUI(final MP3Player player) {
 
-    player.setOpaque(false);
+		player.setOpaque(false);
 
-    final BufferedImage soundOnImage = ImageUtils.create(getClass().getResource("resources/mp3PlayerSoundOn.png"));
-    final BufferedImage soundOnImageRollover = ImageUtils.addBrightness(soundOnImage, 0.05f);
-    final BufferedImage soundOnImagePressed = ImageUtils.addDarkness(soundOnImage, 0.05f);
+		final BufferedImage soundOnImage = ImageUtils.create(getClass().getResource("resources/mp3PlayerSoundOn.png"));
+		final BufferedImage soundOnImageRollover = ImageUtils.addBrightness(soundOnImage, 0.05f);
+		final BufferedImage soundOnImagePressed = ImageUtils.addDarkness(soundOnImage, 0.05f);
 
-    final BufferedImage soundOffImage = ImageUtils.create(getClass().getResource("resources/mp3PlayerSoundOff.png"));
-    final BufferedImage soundOffImageRollover = ImageUtils.addBrightness(soundOffImage, 0.05f);
-    final BufferedImage soundOffImagePressed = ImageUtils.addDarkness(soundOffImage, 0.05f);
+		final BufferedImage soundOffImage = ImageUtils.create(getClass().getResource("resources/mp3PlayerSoundOff.png"));
+		final BufferedImage soundOffImageRollover = ImageUtils.addBrightness(soundOffImage, 0.05f);
+		final BufferedImage soundOffImagePressed = ImageUtils.addDarkness(soundOffImage, 0.05f);
 
-    playerButton = new JButton();
-    playerButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    playerButton.setBorder(BorderFactory.createEmptyBorder());
-    playerButton.setMargin(new Insets(0, 0, 0, 0));
-    playerButton.setContentAreaFilled(false);
-    playerButton.setFocusable(false);
-    playerButton.setFocusPainted(false);
+		playerButton = new JButton();
+		playerButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		playerButton.setBorder(BorderFactory.createEmptyBorder());
+		playerButton.setMargin(new Insets(0, 0, 0, 0));
+		playerButton.setContentAreaFilled(false);
+		playerButton.setFocusable(false);
+		playerButton.setFocusPainted(false);
 
-    //
+		//
 
-    playerButton.setIcon(IconUtils.create(soundOffImage));
-    playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
-    playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
+		playerButton.setIcon(IconUtils.create(soundOffImage));
+		playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
+		playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
 
-    playerButton.addActionListener(new ActionListener() {
+		playerButton.addActionListener(new ActionListener() {
 
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (player.isPaused() || player.isStopped()) {
-          player.play();
-        } else {
-          player.pause();
-        }
-      }
-    });
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (player.isPaused() || player.isStopped()) {
+					player.play();
+				} else {
+					player.pause();
+				}
+			}
+		});
 
-    //
+		//
 
-    player.addMP3PlayerListener(new MP3PlayerListener() {
+		player.addMP3PlayerListener(new MP3PlayerListener() {
 
-      @Override
-      public void onPlay(MP3Player player) {
-        playerButton.setIcon(IconUtils.create(soundOnImage));
-        playerButton.setRolloverIcon(IconUtils.create(soundOnImageRollover));
-        playerButton.setPressedIcon(IconUtils.create(soundOnImagePressed));
-      }
+			@Override
+			public void onPlay(MP3Player player) {
+				playerButton.setIcon(IconUtils.create(soundOnImage));
+				playerButton.setRolloverIcon(IconUtils.create(soundOnImageRollover));
+				playerButton.setPressedIcon(IconUtils.create(soundOnImagePressed));
+			}
 
-      @Override
-      public void onPause(MP3Player player) {
-        playerButton.setIcon(IconUtils.create(soundOffImage));
-        playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
-        playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
-      }
+			@Override
+			public void onPause(MP3Player player) {
+				playerButton.setIcon(IconUtils.create(soundOffImage));
+				playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
+				playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
+			}
 
-      @Override
-      public void onStop(MP3Player player) {}
-    });
+			@Override
+			public void onStop(MP3Player player) {}
+		});
 
-    //
+		//
 
-    player.add(playerButton);
+		player.add(playerButton);
 
-    player.setLayout(new LayoutManager() {
+		player.setLayout(new LayoutManager() {
 
-      @Override
-      public void layoutContainer(Container parent) {
-        synchronized (parent.getTreeLock()) {
+			@Override
+			public void layoutContainer(Container parent) {
+				synchronized (parent.getTreeLock()) {
 
-          Dimension parentSize = parent.getSize();
-          Dimension buttonSize = playerButton.getPreferredSize();
+					Dimension parentSize = parent.getSize();
+					Dimension buttonSize = playerButton.getPreferredSize();
 
-          Rectangle bounds = new Rectangle(buttonSize);
+					Rectangle bounds = new Rectangle(buttonSize);
 
-          bounds.x = (parentSize.width - buttonSize.width) / 2;
-          bounds.y = (parentSize.height - buttonSize.height) / 2;
+					bounds.x = (parentSize.width - buttonSize.width) / 2;
+					bounds.y = (parentSize.height - buttonSize.height) / 2;
 
-          playerButton.setBounds(bounds);
-        }
-      }
+					playerButton.setBounds(bounds);
+				}
+			}
 
-      @Override
-      public Dimension preferredLayoutSize(Container parent) {
-        Insets insets = parent.getInsets();
-        Dimension size = new Dimension(playerButton.getPreferredSize());
-        size.width = size.width + insets.left + insets.right;
-        size.height = size.height + insets.top + insets.bottom;
-        return size;
-      }
+			@Override
+			public Dimension preferredLayoutSize(Container parent) {
+				Insets insets = parent.getInsets();
+				Dimension size = new Dimension(playerButton.getPreferredSize());
+				size.width = size.width + insets.left + insets.right;
+				size.height = size.height + insets.top + insets.bottom;
+				return size;
+			}
 
-      @Override
-      public Dimension minimumLayoutSize(Container parent) {
-        Insets insets = parent.getInsets();
-        Dimension size = new Dimension(playerButton.getMinimumSize());
-        size.width = size.width + insets.left + insets.right;
-        size.height = size.height + insets.top + insets.bottom;
-        return size;
-      }
+			@Override
+			public Dimension minimumLayoutSize(Container parent) {
+				Insets insets = parent.getInsets();
+				Dimension size = new Dimension(playerButton.getMinimumSize());
+				size.width = size.width + insets.left + insets.right;
+				size.height = size.height + insets.top + insets.bottom;
+				return size;
+			}
 
-      @Override
-      public void removeLayoutComponent(Component comp) {}
+			@Override
+			public void removeLayoutComponent(Component comp) {}
 
-      @Override
-      public void addLayoutComponent(String name, Component comp) {}
+			@Override
+			public void addLayoutComponent(String name, Component comp) {}
 
-    });
-  }
+		});
+	}
 
 }

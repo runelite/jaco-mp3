@@ -42,119 +42,119 @@ import javax.swing.plaf.basic.BasicPanelUI;
  */
 public class MP3PlayerUI extends BasicPanelUI {
 
-  public static ComponentUI createUI(JComponent c) {
-    return new MP3PlayerUI();
-  }
+	public static ComponentUI createUI(JComponent c) {
+		return new MP3PlayerUI();
+	}
 
-  //
+	//
 
-  @Override
-  public final void installUI(JComponent c) {
-    super.installUI(c);
-    installUI((MP3Player) c);
-  }
+	@Override
+	public final void installUI(JComponent c) {
+		super.installUI(c);
+		installUI((MP3Player) c);
+	}
 
-  @Override
-  public final void uninstallUI(JComponent c) {
-    super.uninstallUI(c);
-    uninstallUI((MP3Player) c);
-  }
+	@Override
+	public final void uninstallUI(JComponent c) {
+		super.uninstallUI(c);
+		uninstallUI((MP3Player) c);
+	}
 
-  //
+	//
 
-  private JButton playButton;
-  private JButton pauseButton;
-  private JButton stopButton;
-  private JButton skipBackwardButton;
-  private JButton skipForwardButton;
+	private JButton playButton;
+	private JButton pauseButton;
+	private JButton stopButton;
+	private JButton skipBackwardButton;
+	private JButton skipForwardButton;
 
-  // private JButton shuffleButton;
-  // private JButton repeatButton;
+	// private JButton shuffleButton;
+	// private JButton repeatButton;
 
-  protected void installUI(final MP3Player player) {
+	protected void installUI(final MP3Player player) {
 
-    player.setOpaque(false);
+		player.setOpaque(false);
 
-    playButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPlay.png")));
-    pauseButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPause.png")));
-    stopButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerStop.png")));
-    skipBackwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipBackward.png")));
-    skipForwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipForward.png")));
-    // shuffleButton = new
-    // PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerShuffle.png")));
-    // repeatButton = new
-    // PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerRepeat.png")));
+		playButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPlay.png")));
+		pauseButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerPause.png")));
+		stopButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerStop.png")));
+		skipBackwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipBackward.png")));
+		skipForwardButton = new PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerSkipForward.png")));
+		// shuffleButton = new
+		// PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerShuffle.png")));
+		// repeatButton = new
+		// PlayerButton(ImageUtils.create(getClass().getResource("resources/mp3PlayerRepeat.png")));
 
-    ActionListener actionListener = new ActionListener() {
+		ActionListener actionListener = new ActionListener() {
 
-      @Override
-      public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-        Object source = e.getSource();
+				Object source = e.getSource();
 
-        if (source == playButton) {
-          player.play();
-        } else if (source == pauseButton) {
-          player.pause();
-        } else if (source == stopButton) {
-          player.stop();
-        } else if (source == skipBackwardButton) {
-          player.skipBackward();
-        } else if (source == skipForwardButton) {
-          player.skipForward();
-        }
-      }
-    };
+				if (source == playButton) {
+					player.play();
+				} else if (source == pauseButton) {
+					player.pause();
+				} else if (source == stopButton) {
+					player.stop();
+				} else if (source == skipBackwardButton) {
+					player.skipBackward();
+				} else if (source == skipForwardButton) {
+					player.skipForward();
+				}
+			}
+		};
 
-    playButton.addActionListener(actionListener);
-    pauseButton.addActionListener(actionListener);
-    stopButton.addActionListener(actionListener);
-    skipBackwardButton.addActionListener(actionListener);
-    skipForwardButton.addActionListener(actionListener);
-    // shuffleButton.addActionListener(actionListener);
-    // repeatButton.addActionListener(actionListener);
+		playButton.addActionListener(actionListener);
+		pauseButton.addActionListener(actionListener);
+		stopButton.addActionListener(actionListener);
+		skipBackwardButton.addActionListener(actionListener);
+		skipForwardButton.addActionListener(actionListener);
+		// shuffleButton.addActionListener(actionListener);
+		// repeatButton.addActionListener(actionListener);
 
-    //
+		//
 
-    player.setLayout(new FlowLayout(FlowLayout.CENTER, 1, 1));
-    player.add(playButton);
-    player.add(pauseButton);
-    player.add(stopButton);
-    player.add(skipBackwardButton);
-    player.add(skipForwardButton);
-    // player.add(shuffleButton);
-    // player.add(repeatButton);
-  }
+		player.setLayout(new FlowLayout(FlowLayout.CENTER, 1, 1));
+		player.add(playButton);
+		player.add(pauseButton);
+		player.add(stopButton);
+		player.add(skipBackwardButton);
+		player.add(skipForwardButton);
+		// player.add(shuffleButton);
+		// player.add(repeatButton);
+	}
 
-  @SuppressWarnings("serial")
-  private class PlayerButton extends JButton {
+	@SuppressWarnings("serial")
+	private class PlayerButton extends JButton {
 
-    private PlayerButton(BufferedImage image) {
+		private PlayerButton(BufferedImage image) {
 
-      BufferedImage image1 = ImageUtils.addBrightness(image, 0.05f);
-      BufferedImage image2 = ImageUtils.addDarkness(image, 0.05f);
+			BufferedImage image1 = ImageUtils.addBrightness(image, 0.05f);
+			BufferedImage image2 = ImageUtils.addDarkness(image, 0.05f);
 
-      setIcon(IconUtils.create(image));
-      setRolloverIcon(IconUtils.create(image1));
-      setPressedIcon(IconUtils.create(image2));
+			setIcon(IconUtils.create(image));
+			setRolloverIcon(IconUtils.create(image1));
+			setPressedIcon(IconUtils.create(image2));
 
-      setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      setBorder(BorderFactory.createEmptyBorder());
-      setMargin(new Insets(0, 0, 0, 0));
-      setContentAreaFilled(false);
-      setFocusable(false);
-      setFocusPainted(false);
-    }
+			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			setBorder(BorderFactory.createEmptyBorder());
+			setMargin(new Insets(0, 0, 0, 0));
+			setContentAreaFilled(false);
+			setFocusable(false);
+			setFocusPainted(false);
+		}
 
-  }
+	}
 
-  //
-  // ---
-  //
+	//
+	// ---
+	//
 
-  protected void uninstallUI(final MP3Player player) {
-    player.removeAll();
-    player.removeAllMP3PlayerListeners();
-  }
+	protected void uninstallUI(final MP3Player player) {
+		player.removeAll();
+		player.removeAllMP3PlayerListeners();
+	}
 
 }
