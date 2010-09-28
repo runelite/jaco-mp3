@@ -65,47 +65,47 @@ import javax.swing.JApplet;
  */
 public class MP3PlayerApplet extends JApplet {
 
-  /** serialVersionUID */
-  private static final long serialVersionUID = 46146126474303823L;
+	/** serialVersionUID */
+	private static final long serialVersionUID = 46146126474303823L;
 
-  @Override
-  public void init() {
-    try {
-      javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
-        public void run() {
-          createGUI();
-        }
-      });
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+	@Override
+	public void init() {
+		try {
+			javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					createGUI();
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-  private void createGUI() {
+	private void createGUI() {
 
-    try {
+		try {
 
-      try {
-        getContentPane().setBackground(Color.decode(getParameter("background")));
-      } catch (Exception e) {}
+			try {
+				getContentPane().setBackground(Color.decode(getParameter("background")));
+			} catch (Exception e) {}
 
-      if ("true".equals(getParameter("compact"))) {
-        MP3Player.setDefaultUI(MP3PlayerUICompact.class);
-      }
+			if ("true".equals(getParameter("compact"))) {
+				MP3Player.setDefaultUI(MP3PlayerUICompact.class);
+			}
 
-      MP3Player player = new MP3Player();
-      player.setRepeat(true);
+			MP3Player player = new MP3Player();
+			player.setRepeat(true);
 
-      String[] playlist = getParameter("playlist").split(",");
-      for (String mp3 : playlist) {
-        player.addToPlayList(new URL(getCodeBase() + mp3.trim()));
-      }
+			String[] playlist = getParameter("playlist").split(",");
+			for (String mp3 : playlist) {
+				player.addToPlayList(new URL(getCodeBase() + mp3.trim()));
+			}
 
-      getContentPane().add(player, BorderLayout.CENTER);
+			getContentPane().add(player, BorderLayout.CENTER);
 
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

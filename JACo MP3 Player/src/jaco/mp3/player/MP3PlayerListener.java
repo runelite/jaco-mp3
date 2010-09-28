@@ -26,19 +26,19 @@ package jaco.mp3.player;
 
 public interface MP3PlayerListener {
 
-  /**
-   * Invoked when a player start playing.
-   */
-  void onPlay(MP3Player player);
+	/**
+	 * Invoked when a player start playing.
+	 */
+	void onPlay(MP3Player player);
 
-  /**
-   * Invoked when a player pause.
-   */
-  void onPause(MP3Player player);
+	/**
+	 * Invoked when a player pause.
+	 */
+	void onPause(MP3Player player);
 
-  /**
-   * Invoked when a player stops.
-   */
-  void onStop(MP3Player player);
+	/**
+	 * Invoked when a player stops.
+	 */
+	void onStop(MP3Player player);
 
 }
