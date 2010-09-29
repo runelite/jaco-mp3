@@ -95,14 +95,8 @@ public class MP3PlayerUI extends BasicPanelUI {
 		volumeSlider.setMaximum(100);
 		volumeSlider.setMajorTickSpacing(50);
 		volumeSlider.setMinorTickSpacing(10);
-		// volumeSlider.setSnapToTicks(true);
 		volumeSlider.setPaintTicks(true);
 		volumeSlider.setPaintTrack(true);
-		// volumeSlider.setPaintLabels(true);
-		volumeSlider.setValue(player.getVolume());
-
-		repeatButton.setSelected(player.isRepeat());
-		shuffleButton.setSelected(player.isShuffle());
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(player);
 		player.setLayout(layout);
@@ -156,6 +150,27 @@ public class MP3PlayerUI extends BasicPanelUI {
 	protected void uninstallUI(final MP3Player player) {
 		player.removeAll();
 		player.removeAllMP3PlayerListeners();
+	}
+
+	public void onSetVolume(int volume) {
+		if (volumeSlider.getValue() == volume) {
+			return;
+		}
+		volumeSlider.setValue(volume);
+	}
+
+	public void onSetShuffle(boolean shuffle) {
+		if (shuffleButton.isSelected() == shuffle) {
+			return;
+		}
+		shuffleButton.setEnabled(shuffle);
+	}
+
+	public void onSetRepeat(boolean repeat) {
+		if (repeatButton.isSelected() == repeat) {
+			return;
+		}
+		repeatButton.setEnabled(repeat);
 	}
 
 }

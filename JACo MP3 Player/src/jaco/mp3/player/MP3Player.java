@@ -71,38 +71,52 @@ public class MP3Player extends JPanel {
 
 	private final Random random = new Random();
 
-	private List<MP3PlayerListener> listeners;
+	private volatile List<MP3PlayerListener> listeners;
 
-	private List<URL> playList = new Vector<URL>();
-	private int playIndex;
-
-	private boolean shuffle = false;
-	private boolean repeat = false;
+	private volatile List<URL> playList = new Vector<URL>();
+	private volatile int playIndex;
 
 	private volatile boolean isPaused = false;
 	private volatile boolean isStopped = true;
 	private volatile boolean isStopping = false;
 
-	private volatile int volume = 25;
+	private volatile int volume;
+	private volatile boolean shuffle;
+	private volatile boolean repeat;
 
-	public MP3Player() {}
+	public MP3Player() {
+		super();
+		init();
+	}
 
 	public MP3Player(URL... mp3s) {
+		super();
 		for (URL mp3 : mp3s) {
 			addToPlayList(mp3);
 		}
+		init();
 	}
 
 	public MP3Player(File... mp3s) {
+		super();
 		for (File mp3 : mp3s) {
 			addToPlayList(mp3);
 		}
+		init();
 	}
 
 	public MP3Player(String... mp3s) {
+		super();
 		for (String mp3 : mp3s) {
 			addToPlayList(new File(mp3));
 		}
+		init();
+	}
+
+	protected void init() {
+		setVolume(25);
+		setShuffle(false);
+		setRepeat(false);
 	}
 
 	/**
@@ -335,26 +349,6 @@ public class MP3Player extends JPanel {
 	}
 
 	/**
-	 * Returns the actual volume of the player.
-	 */
-	public int getVolume() {
-		return volume;
-	}
-
-	/**
-	 * Sets the volume of the player. The value is actually the percent value, so
-	 * the value must be in interval [0..100].
-	 */
-	public void setVolume(int volume) {
-
-		if (volume < 0 || volume > 100) {
-			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
-		}
-
-		this.volume = volume;
-	}
-
-	/**
 	 * Determines whether this player is paused.
 	 * 
 	 * @return true if the player is paused, false otherwise
@@ -456,6 +450,27 @@ public class MP3Player extends JPanel {
 	}
 
 	/**
+	 * Returns the actual volume of the player.
+	 */
+	public int getVolume() {
+		return volume;
+	}
+
+	/**
+	 * Sets the volume of the player. The value is actually the percent value, so
+	 * the value must be in interval [0..100].
+	 */
+	public void setVolume(int volume) {
+
+		if (volume < 0 || volume > 100) {
+			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
+		}
+
+		this.volume = volume;
+		getUI().onSetVolume(volume);
+	}
+
+	/**
 	 * Returns the shuffle state of the player. True if the shuffle is on, false
 	 * if it's not.
 	 * 
@@ -478,6 +493,7 @@ public class MP3Player extends JPanel {
 	 */
 	public void setShuffle(boolean shuffle) {
 		this.shuffle = shuffle;
+		getUI().onSetShuffle(shuffle);
 	}
 
 	/**
@@ -504,6 +520,12 @@ public class MP3Player extends JPanel {
 	 */
 	public void setRepeat(boolean repeat) {
 		this.repeat = repeat;
+		getUI().onSetRepeat(shuffle);
+	}
+
+	@Override
+	public MP3PlayerUI getUI() {
+		return (MP3PlayerUI) super.getUI();
 	}
 
 }
