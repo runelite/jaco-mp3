@@ -65,8 +65,9 @@ public class MP3PlayerUI extends BasicPanelUI {
 	private JButton skipBackwardButton;
 	private JButton skipForwardButton;
 	private JSlider volumeSlider;
-	private JCheckBox shuffleButton;
-	private JCheckBox repeatButton;
+
+	private JCheckBox shuffleCheckBox;
+	private JCheckBox repeatCheckBox;
 
 	protected void installUI(final MP3Player player) {
 
@@ -80,16 +81,17 @@ public class MP3PlayerUI extends BasicPanelUI {
 		skipForwardButton = new javax.swing.JButton();
 		volumeSlider = new javax.swing.JSlider();
 		playButton = new javax.swing.JButton();
-		repeatButton = new javax.swing.JCheckBox();
-		shuffleButton = new javax.swing.JCheckBox();
+		repeatCheckBox = new javax.swing.JCheckBox();
+		shuffleCheckBox = new javax.swing.JCheckBox();
 
 		pauseButton.setText("||");
 		stopButton.setText("#");
 		skipBackwardButton.setText("|<");
 		skipForwardButton.setText(">|");
 		playButton.setText(">");
-		repeatButton.setText("Repeat");
-		shuffleButton.setText("Shuffle");
+
+		repeatCheckBox.setText("Repeat");
+		shuffleCheckBox.setText("Shuffle");
 
 		volumeSlider.setMinimum(0);
 		volumeSlider.setMaximum(100);
@@ -100,8 +102,8 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(player);
 		player.setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(playButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(volumeSlider, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE).addGroup(layout.createSequentialGroup().addComponent(pauseButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(stopButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipBackwardButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipForwardButton))).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(repeatButton).addComponent(shuffleButton)).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(playButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(pauseButton).addComponent(stopButton).addComponent(skipBackwardButton).addComponent(skipForwardButton)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addGroup(layout.createSequentialGroup().addComponent(shuffleButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(repeatButton))).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(playButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(volumeSlider, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE).addGroup(layout.createSequentialGroup().addComponent(pauseButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(stopButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipBackwardButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipForwardButton))).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(repeatCheckBox).addComponent(shuffleCheckBox)).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(playButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(pauseButton).addComponent(stopButton).addComponent(skipBackwardButton).addComponent(skipForwardButton)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addGroup(layout.createSequentialGroup().addComponent(shuffleCheckBox).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(repeatCheckBox))).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
 		//
 
@@ -122,10 +124,10 @@ public class MP3PlayerUI extends BasicPanelUI {
 					player.skipBackward();
 				} else if (source == skipForwardButton) {
 					player.skipForward();
-				} else if (source == shuffleButton) {
-					player.setShuffle(shuffleButton.isSelected());
-				} else if (source == repeatButton) {
-					player.setRepeat(repeatButton.isSelected());
+				} else if (source == shuffleCheckBox) {
+					player.setShuffle(shuffleCheckBox.isSelected());
+				} else if (source == repeatCheckBox) {
+					player.setRepeat(repeatCheckBox.isSelected());
 				}
 			}
 		};
@@ -135,8 +137,8 @@ public class MP3PlayerUI extends BasicPanelUI {
 		stopButton.addActionListener(actionListener);
 		skipBackwardButton.addActionListener(actionListener);
 		skipForwardButton.addActionListener(actionListener);
-		shuffleButton.addActionListener(actionListener);
-		repeatButton.addActionListener(actionListener);
+		shuffleCheckBox.addActionListener(actionListener);
+		repeatCheckBox.addActionListener(actionListener);
 
 		//
 
@@ -160,17 +162,17 @@ public class MP3PlayerUI extends BasicPanelUI {
 	}
 
 	public void onSetShuffle(boolean shuffle) {
-		if (shuffleButton.isSelected() == shuffle) {
+		if (shuffleCheckBox.isSelected() == shuffle) {
 			return;
 		}
-		shuffleButton.setEnabled(shuffle);
+		shuffleCheckBox.setEnabled(shuffle);
 	}
 
 	public void onSetRepeat(boolean repeat) {
-		if (repeatButton.isSelected() == repeat) {
+		if (repeatCheckBox.isSelected() == repeat) {
 			return;
 		}
-		repeatButton.setEnabled(repeat);
+		repeatCheckBox.setEnabled(repeat);
 	}
 
 }
