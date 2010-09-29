@@ -365,14 +365,19 @@ public class MP3Player extends JPanel {
 	 *          the listener to be removed
 	 */
 	public synchronized void removeMP3PlayerListener(MP3PlayerListener listener) {
-		listeners.remove(listener);
+		if (listeners != null) {
+			listeners.remove(listener);
+		}
 	}
 
 	/**
 	 * Removes all of the {@link MP3PlayerListener} listeners from this player.
 	 */
 	public synchronized void removeAllMP3PlayerListeners() {
-		listeners.clear();
+		if (listeners != null) {
+			listeners.clear();
+			listeners = null;
+		}
 	}
 
 	/**
