@@ -5,11 +5,14 @@ import jaco.mp3.player.MP3Player;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 public class Test1 {
 
 	public static void main(String[] args) throws Exception {
 
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		
 		// MP3Player.setDefaultUI(MP3PlayerUICompact.class);
 
 		//
