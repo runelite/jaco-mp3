@@ -28,7 +28,9 @@ import jaco.mp3.player.resources.player.AudioDeviceBase;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
@@ -141,14 +143,35 @@ public class SoundDevice extends AudioDeviceBase
 		}
 	}
 
-	protected void writeImpl(short[] samples, int offs, int len)
-		throws JavaLayerException
-	{
-		if (source==null)
-			createSource();
+	
+	private int volume = 100;
 
-		byte[] b = toByteArray(samples, offs, len);
-		source.write(b, 0, len*2);
+	public void setVolume(int volume) {
+		this.volume = volume;
+	}
+	
+	protected void writeImpl(short[] samples, int offs, int len) throws JavaLayerException {
+
+		if (source == null) {
+			createSource();
+		}
+
+		try {
+
+			FloatControl gainControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
+			BooleanControl muteControl = (BooleanControl) source.getControl(BooleanControl.Type.MUTE);
+
+			if (volume == 0) {
+				muteControl.setValue(true);
+			} else {
+				muteControl.setValue(false);
+				gainControl.setValue((float) (Math.log(volume / 100d) / Math.log(10.0) * 20.0));
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+
+		source.write(toByteArray(samples, offs, len), 0, len * 2);
 	}
 
 	protected byte[] getByteArray(int length)
