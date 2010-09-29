@@ -38,10 +38,12 @@ import javax.swing.UIManager;
  * Java MP3 Player
  * 
  * <pre>
+ * new MP3Player(&quot;test.mp3&quot;).play();
+ * ...
  * new MP3Player(new File(&quot;test.mp3&quot;)).play();
  * </pre>
  * 
- * @version 1.36, May 27, 2010
+ * @version 1.40, September 29, 2010
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 @SuppressWarnings("serial")
@@ -81,6 +83,8 @@ public class MP3Player extends JPanel {
 	private volatile boolean isStopped = true;
 	private volatile boolean isStopping = false;
 
+	private volatile int volume = 25;
+
 	public MP3Player() {}
 
 	public MP3Player(URL... mp3s) {
@@ -92,6 +96,12 @@ public class MP3Player extends JPanel {
 	public MP3Player(File... mp3s) {
 		for (File mp3 : mp3s) {
 			addToPlayList(mp3);
+		}
+	}
+
+	public MP3Player(String... mp3s) {
+		for (String mp3 : mp3s) {
+			addToPlayList(new File(mp3));
 		}
 	}
 
@@ -177,6 +187,7 @@ public class MP3Player extends JPanel {
 
 								SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frame, stream);
 
+								device.setVolume(volume);
 								device.write(output.getBuffer(), 0, output.getBufferLength());
 
 								stream.closeFrame();
@@ -321,6 +332,26 @@ public class MP3Player extends JPanel {
 				play();
 			}
 		}
+	}
+
+	/**
+	 * Returns the actual volume of the player.
+	 */
+	public int getVolume() {
+		return volume;
+	}
+
+	/**
+	 * Sets the volume of the player. The value is actually the percent value, so
+	 * the value must be in interval [0..100].
+	 */
+	public void setVolume(int volume) {
+
+		if (volume < 0 || volume > 100) {
+			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
+		}
+
+		this.volume = volume;
 	}
 
 	/**
