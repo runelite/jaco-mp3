@@ -76,9 +76,15 @@ public class MP3PlayerUICompact extends MP3PlayerUI {
 
 		//
 
-		playerButton.setIcon(IconUtils.create(soundOffImage));
-		playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
-		playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
+		if (player.isPaused() || player.isStopped()) {
+			playerButton.setIcon(IconUtils.create(soundOffImage));
+			playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
+			playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
+		} else {
+			playerButton.setIcon(IconUtils.create(soundOnImage));
+			playerButton.setRolloverIcon(IconUtils.create(soundOnImageRollover));
+			playerButton.setPressedIcon(IconUtils.create(soundOnImagePressed));
+		}
 
 		playerButton.addActionListener(new ActionListener() {
 
