@@ -1,6 +1,7 @@
 package jaco.mp3.player.tests;
 
 import jaco.mp3.player.MP3Player;
+import jaco.mp3.player.MP3PlayerUI;
 
 import java.io.File;
 
@@ -12,8 +13,8 @@ public class Test1 {
 	public static void main(String[] args) throws Exception {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		
-		// MP3Player.setDefaultUI(MP3PlayerUICompact.class);
+
+		MP3Player.setDefaultUI(MP3PlayerUI.class);
 
 		//
 
