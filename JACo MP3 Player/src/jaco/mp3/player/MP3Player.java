@@ -17,7 +17,6 @@
 
 package jaco.mp3.player;
 
-import jaco.mp3.player.plaf.MP3PlayerUI;
 import jaco.mp3.player.resources.Decoder;
 import jaco.mp3.player.resources.Frame;
 import jaco.mp3.player.resources.SampleBuffer;
@@ -49,7 +48,7 @@ import javax.swing.UIManager;
 @SuppressWarnings("serial")
 public class MP3Player extends JPanel {
 
-	public static final String UI_CLASS_ID = MP3Player.class.getName() + "UI";
+	public static final String UI_CLASS_ID = MP3Player.class.getSimpleName() + "UI";
 
 	public String getUIClassID() {
 		return UI_CLASS_ID;

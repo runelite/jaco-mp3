@@ -17,8 +17,6 @@
 
 package jaco.mp3.player;
 
-import jaco.mp3.player.plaf.MP3PlayerUICompact;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.net.URL;
@@ -90,7 +88,7 @@ public class MP3PlayerApplet extends JApplet {
 			} catch (Exception e) {}
 
 			if ("true".equals(getParameter("compact"))) {
-				MP3Player.setDefaultUI(MP3PlayerUICompact.class);
+				//MP3Player.setDefaultUI(MP3PlayerUICompact.class);
 			}
 
 			MP3Player player = new MP3Player();
