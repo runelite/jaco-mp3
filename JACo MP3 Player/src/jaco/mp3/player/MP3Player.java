@@ -117,6 +117,7 @@ public class MP3Player extends JPanel {
 		setVolume(25);
 		setShuffle(false);
 		setRepeat(false);
+		stop();
 	}
 
 	/**
