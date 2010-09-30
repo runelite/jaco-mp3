@@ -43,7 +43,7 @@ import javax.swing.UIManager;
  * new MP3Player(new File(&quot;test.mp3&quot;)).play();
  * </pre>
  * 
- * @version 1.40, September 29, 2010
+ * @version 1.41, September 30, 2010
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 @SuppressWarnings("serial")
@@ -466,8 +466,13 @@ public class MP3Player extends JPanel {
 			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
 		}
 
+		if (listeners != null) {
+			for (MP3PlayerListener listener : listeners) {
+				listener.onSetVolume(MP3Player.this, volume);
+			}
+		}
+
 		this.volume = volume;
-		getUI().onSetVolume(volume);
 	}
 
 	/**
@@ -492,8 +497,14 @@ public class MP3Player extends JPanel {
 	 * @see #isShuffle()
 	 */
 	public void setShuffle(boolean shuffle) {
+
+		if (listeners != null) {
+			for (MP3PlayerListener listener : listeners) {
+				listener.onSetShuffle(MP3Player.this, shuffle);
+			}
+		}
+
 		this.shuffle = shuffle;
-		getUI().onSetShuffle(shuffle);
 	}
 
 	/**
@@ -519,13 +530,14 @@ public class MP3Player extends JPanel {
 	 * @see #isRepeat()
 	 */
 	public void setRepeat(boolean repeat) {
-		this.repeat = repeat;
-		getUI().onSetRepeat(shuffle);
-	}
 
-	@Override
-	public MP3PlayerUI getUI() {
-		return (MP3PlayerUI) super.getUI();
+		if (listeners != null) {
+			for (MP3PlayerListener listener : listeners) {
+				listener.onSetRepeat(MP3Player.this, repeat);
+			}
+		}
+
+		this.repeat = repeat;
 	}
 
 }

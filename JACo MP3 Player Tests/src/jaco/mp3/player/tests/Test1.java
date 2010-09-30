@@ -19,11 +19,12 @@ public class Test1 {
 
 		final MP3Player player = new MP3Player();
 
-		player.setRepeat(true);
-
 		player.addToPlayList(new File("../JACo MP3 Player/web/demo/01.mp3"));
 		player.addToPlayList(new File("../JACo MP3 Player/web/demo/02.mp3"));
 		player.addToPlayList(new File("../JACo MP3 Player/web/demo/03.mp3"));
+
+		player.setRepeat(true);
+		player.play();
 
 		//
 

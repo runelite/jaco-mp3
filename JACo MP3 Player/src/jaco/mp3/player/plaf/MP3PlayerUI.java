@@ -18,6 +18,7 @@
 package jaco.mp3.player.plaf;
 
 import jaco.mp3.player.MP3Player;
+import jaco.mp3.player.MP3PlayerListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,10 +65,13 @@ public class MP3PlayerUI extends BasicPanelUI {
 	private JButton stopButton;
 	private JButton skipBackwardButton;
 	private JButton skipForwardButton;
+
 	private JSlider volumeSlider;
 
 	private JCheckBox shuffleCheckBox;
 	private JCheckBox repeatCheckBox;
+
+	private MP3PlayerListener listener;
 
 	protected void installUI(final MP3Player player) {
 
@@ -75,30 +79,74 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		//
 
-		pauseButton = new javax.swing.JButton();
-		stopButton = new javax.swing.JButton();
-		skipBackwardButton = new javax.swing.JButton();
-		skipForwardButton = new javax.swing.JButton();
-		volumeSlider = new javax.swing.JSlider();
 		playButton = new javax.swing.JButton();
-		repeatCheckBox = new javax.swing.JCheckBox();
-		shuffleCheckBox = new javax.swing.JCheckBox();
-
-		pauseButton.setText("||");
-		stopButton.setText("#");
-		skipBackwardButton.setText("|<");
-		skipForwardButton.setText(">|");
 		playButton.setText(">");
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				player.play();
+			}
+		});
 
-		repeatCheckBox.setText("Repeat");
-		shuffleCheckBox.setText("Shuffle");
+		pauseButton = new javax.swing.JButton();
+		pauseButton.setText("||");
+		pauseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				player.pause();
+			}
+		});
 
+		stopButton = new javax.swing.JButton();
+		stopButton.setText("#");
+		stopButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				player.stop();
+			}
+		});
+
+		skipBackwardButton = new javax.swing.JButton();
+		skipBackwardButton.setText("|<");
+		skipBackwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				player.skipBackward();
+			}
+		});
+
+		skipForwardButton = new javax.swing.JButton();
+		skipForwardButton.setText(">|");
+		skipForwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				player.skipForward();
+			}
+		});
+
+		volumeSlider = new javax.swing.JSlider();
+		volumeSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				player.setVolume(volumeSlider.getValue());
+			}
+		});
 		volumeSlider.setMinimum(0);
 		volumeSlider.setMaximum(100);
 		volumeSlider.setMajorTickSpacing(50);
 		volumeSlider.setMinorTickSpacing(10);
 		volumeSlider.setPaintTicks(true);
 		volumeSlider.setPaintTrack(true);
+
+		repeatCheckBox = new javax.swing.JCheckBox();
+		repeatCheckBox.setText("Repeat");
+		repeatCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				player.setRepeat(repeatCheckBox.isSelected());
+			}
+		});
+
+		shuffleCheckBox = new javax.swing.JCheckBox();
+		shuffleCheckBox.setText("Shuffle");
+		shuffleCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				player.setShuffle(shuffleCheckBox.isSelected());
+			}
+		});
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(player);
 		player.setLayout(layout);
@@ -107,72 +155,43 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		//
 
-		ActionListener actionListener = new ActionListener() {
+		player.addMP3PlayerListener(listener = new MP3PlayerListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void onPlay(MP3Player player) {}
 
-				Object source = e.getSource();
+			@Override
+			public void onPause(MP3Player player) {}
 
-				if (source == playButton) {
-					player.play();
-				} else if (source == pauseButton) {
-					player.pause();
-				} else if (source == stopButton) {
-					player.stop();
-				} else if (source == skipBackwardButton) {
-					player.skipBackward();
-				} else if (source == skipForwardButton) {
-					player.skipForward();
-				} else if (source == shuffleCheckBox) {
-					player.setShuffle(shuffleCheckBox.isSelected());
-				} else if (source == repeatCheckBox) {
-					player.setRepeat(repeatCheckBox.isSelected());
+			@Override
+			public void onStop(MP3Player player) {}
+
+			@Override
+			public void onSetVolume(MP3Player player, int volume) {
+				if (volumeSlider.getValue() != volume) {
+					volumeSlider.setValue(volume);
 				}
 			}
-		};
 
-		playButton.addActionListener(actionListener);
-		pauseButton.addActionListener(actionListener);
-		stopButton.addActionListener(actionListener);
-		skipBackwardButton.addActionListener(actionListener);
-		skipForwardButton.addActionListener(actionListener);
-		shuffleCheckBox.addActionListener(actionListener);
-		repeatCheckBox.addActionListener(actionListener);
+			@Override
+			public void onSetRepeat(MP3Player player, boolean repeat) {
+				if (repeatCheckBox.isSelected() != repeat) {
+					repeatCheckBox.setEnabled(repeat);
+				}
+			}
 
-		//
-
-		volumeSlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				player.setVolume(volumeSlider.getValue());
+			@Override
+			public void onSetShuffle(MP3Player player, boolean shuffle) {
+				if (shuffleCheckBox.isSelected() != shuffle) {
+					shuffleCheckBox.setEnabled(shuffle);
+				}
 			}
 		});
 	}
 
 	protected void uninstallUI(final MP3Player player) {
 		player.removeAll();
-		player.removeAllMP3PlayerListeners();
-	}
-
-	public void onSetVolume(int volume) {
-		if (volumeSlider.getValue() == volume) {
-			return;
-		}
-		volumeSlider.setValue(volume);
-	}
-
-	public void onSetShuffle(boolean shuffle) {
-		if (shuffleCheckBox.isSelected() == shuffle) {
-			return;
-		}
-		shuffleCheckBox.setEnabled(shuffle);
-	}
-
-	public void onSetRepeat(boolean repeat) {
-		if (repeatCheckBox.isSelected() == repeat) {
-			return;
-		}
-		repeatCheckBox.setEnabled(repeat);
+		player.removeMP3PlayerListener(listener);
 	}
 
 }

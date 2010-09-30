@@ -20,25 +20,40 @@ package jaco.mp3.player;
 /**
  * The listener interface for handling player events.
  * 
- * @version 1.03, May 27, 2010
+ * @version 1.10, September 30, 2010
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 
 public interface MP3PlayerListener {
 
 	/**
-	 * Invoked when a player start playing.
+	 * Invoked when player start playing.
 	 */
 	void onPlay(MP3Player player);
 
 	/**
-	 * Invoked when a player pause.
+	 * Invoked when player pause.
 	 */
 	void onPause(MP3Player player);
 
 	/**
-	 * Invoked when a player stops.
+	 * Invoked when player stops.
 	 */
 	void onStop(MP3Player player);
+
+	/**
+	 * Invoked when the volume is changed.
+	 */
+	void onSetVolume(MP3Player player, int volume);
+
+	/**
+	 * Invoked when shuffle state of the player is changed.
+	 */
+	void onSetShuffle(MP3Player player, boolean shuffle);
+
+	/**
+	 * Invoked when repeat state of the player is changed.
+	 */
+	void onSetRepeat(MP3Player player, boolean repeat);
 
 }

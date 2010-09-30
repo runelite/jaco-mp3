@@ -100,25 +100,25 @@ public class MP3PlayerUICompact extends MP3PlayerUI {
 
 		//
 
-		player.addMP3PlayerListener(new MP3PlayerListener() {
-
-			@Override
-			public void onPlay(MP3Player player) {
-				playerButton.setIcon(IconUtils.create(soundOnImage));
-				playerButton.setRolloverIcon(IconUtils.create(soundOnImageRollover));
-				playerButton.setPressedIcon(IconUtils.create(soundOnImagePressed));
-			}
-
-			@Override
-			public void onPause(MP3Player player) {
-				playerButton.setIcon(IconUtils.create(soundOffImage));
-				playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
-				playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
-			}
-
-			@Override
-			public void onStop(MP3Player player) {}
-		});
+//		player.addMP3PlayerListener(new MP3PlayerListener() {
+//
+//			@Override
+//			public void onPlay(MP3Player player) {
+//				playerButton.setIcon(IconUtils.create(soundOnImage));
+//				playerButton.setRolloverIcon(IconUtils.create(soundOnImageRollover));
+//				playerButton.setPressedIcon(IconUtils.create(soundOnImagePressed));
+//			}
+//
+//			@Override
+//			public void onPause(MP3Player player) {
+//				playerButton.setIcon(IconUtils.create(soundOffImage));
+//				playerButton.setRolloverIcon(IconUtils.create(soundOffImageRollover));
+//				playerButton.setPressedIcon(IconUtils.create(soundOffImagePressed));
+//			}
+//
+//			@Override
+//			public void onStop(MP3Player player) {}
+//		});
 
 		//
 
