@@ -173,14 +173,14 @@ public class MP3PlayerUI extends BasicPanelUI {
 			@Override
 			public void onSetRepeat(MP3Player player, boolean repeat) {
 				if (repeatCheckBox.isSelected() != repeat) {
-					repeatCheckBox.setEnabled(repeat);
+					repeatCheckBox.setSelected(repeat);
 				}
 			}
 
 			@Override
 			public void onSetShuffle(MP3Player player, boolean shuffle) {
 				if (shuffleCheckBox.isSelected() != shuffle) {
-					shuffleCheckBox.setEnabled(shuffle);
+					shuffleCheckBox.setSelected(shuffle);
 				}
 			}
 		});
