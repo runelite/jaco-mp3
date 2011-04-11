@@ -1,0 +1,228 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	background: #FFFFFF;
+	font-family: Tahoma, Geneva, sans-serif;
+	color: #757E82;
+	xcolor: yellow;
+	overflow: scroll;
+}
+
+h1 {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 46px;
+	font-weight: normal;
+	color: #D9170E;
+}
+
+h2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 28px;
+	font-weight: normal;
+	color: #3A3D40;
+	margin-bottom: 15px;
+	letter-spacing: -1px;
+}
+
+h3 {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	margin-bottom: 10px;
+	font-style: italic;
+}
+
+a {
+	text-decoration: underline;
+	color: #F40C42;
+	font-size: 11px;
+	font-style: normal;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #F40C42;
+}
+
+p {
+	font-size: 11px;
+	font-style: normal;
+	text-indent: 10px;
+	text-align: justify;
+	line-height: 1.5em;
+	margin-bottom: 5px;
+}
+
+#header-wrapper {
+	background: url(images/img01.jpg) repeat-x left top;
+}
+
+#header {
+	width: 900px;
+	height: 130px;
+	margin: auto;
+}
+
+#logo {
+	float: left;
+	padding-right: 10px;
+}
+
+#logo h1 {
+	padding-top: 20px;
+}
+
+#logo a {
+	text-decoration: none;
+	padding-left: 10px;
+	font-size: 10px;
+	letter-spacing: 2px;
+}
+
+#menu {
+	float: right;
+}
+
+#menu ul {
+	list-style: none;
+}
+
+#menu li {
+	display: inline;
+}
+
+#menu a {
+	color: #383B3F;
+	padding-top: 35px;
+	padding-left: 20px;
+	padding-right: 20px;
+	float: left;
+	height: 65px;
+	margin-right: 1px;
+	letter-spacing: -1px;
+	text-decoration: none;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+}
+
+#menu a:hover,#menu .active a {
+	color: #FFFFFF;
+	background: #F40C42 url(images/img02.jpg) repeat-x left bottom;
+}
+
+#page {
+	width: 900px;
+	margin: auto;
+}
+
+#content {
+	width: 630px;
+	float: left;
+}
+
+#sidebar {
+	width: 260px;
+	float: right;
+	background: url(images/img08.jpg) repeat-y left top;
+	font-size: 11px;
+}
+
+#sidebar-bgtop {
+	background: url(images/img07.jpg) no-repeat left top;
+}
+
+#sidebar-bgbtm {
+	background: url(images/img09.jpg) no-repeat left bottom;
+	padding: 40px 40px 0px 40px;
+}
+
+#sidebar ul {
+	list-style: none;
+	padding-bottom: 40px;
+}
+
+#sidebar li {
+	background: url(images/img10.jpg) repeat-x left bottom;
+	padding-top: 7px;
+	padding-bottom: 5px;
+}
+
+#sidebar li a {
+	background: url(images/img11.jpg) no-repeat left 3px;
+	padding-left: 20px;
+	text-decoration: underline;
+	color: #757E82;
+}
+
+#sidebar li a:hover {
+	text-decoration: none;
+	color: #F40C42;
+}
+
+#footer-wrapper {
+	background: #F7F7F7 url(images/img03.jpg) repeat-x left top;
+	padding: 20px;
+}
+
+#footer {
+	width: 900px;
+	margin: 0px auto;
+}
+
+#footer p {
+	text-align: center;
+}
+
+.post {
+	background: url(images/img05.jpg) repeat-y left top;
+	margin: 0px;
+}
+
+.post-bgtop {
+	background: url(images/img04.jpg) no-repeat left top;
+	margin: 0px;
+}
+
+.post-bgbtm {
+	background: url(images/img06.jpg) no-repeat left bottom;
+	padding: 40px 40px 30px 40px;
+}
+
+.dlbutton {
+	width: 300px;
+	padding: 0px;
+	margin: auto;
+}
+
+.dlbutton a {
+	text-decoration: none;
+	display: block;
+	background: url(images/download-button.png) 0px 0px no-repeat;
+	height: 63px;
+	padding: 15px 15px 15px 60px;
+}
+
+.dlbutton a:hover {
+	background-position: -300px 0px;
+	color: #757E82;
+}
+
+.dlbutton span {
+	
+}
+
+.dlbutton spanx {
+	color: #09700B;
+	xfont-size: 1.3em;
+	font-weight: bold;
+	position: static;
+}
+
+.dlbutton spanx emx {
+	font-weight: normal;
+	font-style: normal;
+}
