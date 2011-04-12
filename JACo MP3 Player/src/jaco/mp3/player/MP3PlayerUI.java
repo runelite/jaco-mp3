@@ -32,7 +32,7 @@ import javax.swing.plaf.basic.BasicPanelUI;
 /**
  * Java MP3 Player default UI
  * 
- * @version 2.11, September 30, 2010
+ * @version 2.12, April 12, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 public class MP3PlayerUI extends BasicPanelUI {
@@ -78,6 +78,7 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		playButton = new javax.swing.JButton();
 		playButton.setText(">");
+		playButton.setToolTipText("Play");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				player.play();
@@ -86,6 +87,7 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		pauseButton = new javax.swing.JButton();
 		pauseButton.setText("||");
+		pauseButton.setToolTipText("Pause");
 		pauseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				player.pause();
@@ -94,6 +96,7 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		stopButton = new javax.swing.JButton();
 		stopButton.setText("#");
+		stopButton.setToolTipText("Stop");
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				player.stop();
@@ -102,6 +105,7 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		skipBackwardButton = new javax.swing.JButton();
 		skipBackwardButton.setText("|<");
+		skipBackwardButton.setToolTipText("Skip Backward");
 		skipBackwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				player.skipBackward();
@@ -110,6 +114,7 @@ public class MP3PlayerUI extends BasicPanelUI {
 
 		skipForwardButton = new javax.swing.JButton();
 		skipForwardButton.setText(">|");
+		skipForwardButton.setToolTipText("Skip Forward");
 		skipForwardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				player.skipForward();
@@ -117,6 +122,7 @@ public class MP3PlayerUI extends BasicPanelUI {
 		});
 
 		volumeSlider = new javax.swing.JSlider();
+		volumeSlider.setToolTipText("Volume");
 		volumeSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				player.setVolume(volumeSlider.getValue());
