@@ -42,7 +42,7 @@ import javax.swing.UIManager;
  * new MP3Player(new File(&quot;test.mp3&quot;)).play();
  * </pre>
  * 
- * @version 1.41, September 30, 2010
+ * @version 1.42, April 12, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 @SuppressWarnings("serial")
@@ -56,13 +56,20 @@ public class MP3Player extends JPanel {
 
 	//
 
+	/**
+	 * @deprecated use {@link #setUIClass(Class)}
+	 */
 	public static void setDefaultUI(Class<? extends MP3PlayerUI> uiClass) {
 		UIManager.getDefaults().put(MP3Player.UI_CLASS_ID, uiClass.getName());
+	}
+	
+	public static void setUIClass(Class<? extends MP3PlayerUI> uiClass) {
+		setDefaultUI(uiClass);
 	}
 
 	static {
 		if (UIManager.getDefaults().get(MP3Player.UI_CLASS_ID) == null) {
-			setDefaultUI(MP3PlayerUI.class);
+			setUIClass(MP3PlayerUI.class);
 		}
 	}
 
