@@ -5,7 +5,7 @@
 	$pages = array(
 		'1_overview' => 'Overview',
 		'2_download' => 'Download',
-		'3_guide' => 'Users guide'
+		'3_guide' => 'User guide'
 	);
 	
 	$sf_project_link = 'http://sourceforge.net/projects/jacomp3player/';
