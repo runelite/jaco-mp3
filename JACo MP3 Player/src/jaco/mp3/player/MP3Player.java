@@ -108,9 +108,9 @@ public class MP3Player extends JPanel {
 		init();
 	}
 
-	public MP3Player(File... mp3s) {
+	public MP3Player(File... files) {
 		super();
-		for (File mp3 : mp3s) {
+		for (File mp3 : files) {
 			addToPlayList(mp3);
 		}
 		init();
@@ -137,11 +137,23 @@ public class MP3Player extends JPanel {
 	 * concurrently: the current thread (which returns from the call to the
 	 * {@link #play()} method) and another thread (which executes the actual play:
 	 * stream read/decode, audio data write).
-	 * 
-	 * @see #pause()
-	 * @see #stop()
 	 */
 	public void play() {
+		play(false);
+	}
+
+	/**
+	 * Causes this player to start playing (or resume if the player is paused).
+	 * 
+	 * This is a non blocking method, with the result that two threads are running
+	 * concurrently: the current thread (which returns from the call to the
+	 * {@link #play()} method) and another thread (which executes the actual play:
+	 * stream read/decode, audio data write).
+	 * 
+	 * @param daemon
+	 *          if true, marks the play thread as a daemon thread
+	 */
+	public void play(boolean daemon) {
 
 		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onPlay(MP3Player.this);
@@ -248,7 +260,8 @@ public class MP3Player extends JPanel {
 				isStopped = true;
 			}
 		};
-		thread.setDaemon(true);
+		
+		thread.setDaemon(daemon);
 		thread.start();
 	}
 
@@ -467,7 +480,7 @@ public class MP3Player extends JPanel {
 	 * @throws RuntimeException
 	 *           if the volume is not in interval [0..100]
 	 */
-	public void setVolume(int volume) {
+	public MP3Player setVolume(int volume) {
 
 		if (volume < 0 || volume > 100) {
 			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
@@ -478,6 +491,8 @@ public class MP3Player extends JPanel {
 		}
 
 		this.volume = volume;
+
+		return this;
 	}
 
 	/**
@@ -496,13 +511,15 @@ public class MP3Player extends JPanel {
 	 * 
 	 * @see #isShuffle()
 	 */
-	public void setShuffle(boolean shuffle) {
+	public MP3Player setShuffle(boolean shuffle) {
 
 		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onSetShuffle(MP3Player.this, shuffle);
 		}
 
 		this.shuffle = shuffle;
+
+		return this;
 	}
 
 	/**
@@ -527,13 +544,15 @@ public class MP3Player extends JPanel {
 	 * 
 	 * @see #isRepeat()
 	 */
-	public void setRepeat(boolean repeat) {
+	public MP3Player setRepeat(boolean repeat) {
 
 		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onSetRepeat(MP3Player.this, repeat);
 		}
 
 		this.repeat = repeat;
+
+		return this;
 	}
 
 	/**
