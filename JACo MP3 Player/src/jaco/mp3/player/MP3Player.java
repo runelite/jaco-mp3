@@ -25,7 +25,6 @@ import jaco.mp3.player.resources.SoundStream;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
@@ -85,7 +84,7 @@ public class MP3Player extends JPanel {
 
 	private final Random random = new Random();
 
-	private volatile List<MP3PlayerListener> listeners;
+	private volatile List<MP3PlayerListener> listeners = new Vector<MP3PlayerListener>();
 
 	private volatile List<URL> playList = new Vector<URL>();
 	private volatile int playIndex;
@@ -131,7 +130,6 @@ public class MP3Player extends JPanel {
 		setVolume(25);
 		setShuffle(false);
 		setRepeat(false);
-		stop();
 	}
 
 	/**
@@ -145,12 +143,10 @@ public class MP3Player extends JPanel {
 	 * @see #pause()
 	 * @see #stop()
 	 */
-	public synchronized void play() {
+	public void play() {
 
-		if (listeners != null) {
-			for (MP3PlayerListener listener : listeners) {
-				listener.onPlay(MP3Player.this);
-			}
+		for (MP3PlayerListener listener : listeners) {
+			listener.onPlay(MP3Player.this);
 		}
 
 		if (isPaused) {
@@ -163,7 +159,6 @@ public class MP3Player extends JPanel {
 		isStopped = false;
 
 		Thread thread = new Thread() {
-			@Override
 			public void run() {
 
 				Decoder decoder = new Decoder();
@@ -264,15 +259,24 @@ public class MP3Player extends JPanel {
 	 * 
 	 * @see #play()
 	 */
-	public synchronized void pause() {
+	public void pause() {
 
-		if (listeners != null) {
-			for (MP3PlayerListener listener : listeners) {
-				listener.onPause(MP3Player.this);
-			}
+		for (MP3PlayerListener listener : listeners) {
+			listener.onPause(MP3Player.this);
 		}
 
 		isPaused = true;
+	}
+
+	/**
+	 * Determines whether this player is paused.
+	 * 
+	 * @return true if the player is paused, false otherwise
+	 * 
+	 * @see #pause()
+	 */
+	public boolean isPaused() {
+		return isPaused;
 	}
 
 	/**
@@ -280,15 +284,24 @@ public class MP3Player extends JPanel {
 	 * 
 	 * @see #play()
 	 */
-	public synchronized void stop() {
+	public void stop() {
 
-		if (listeners != null) {
-			for (MP3PlayerListener listener : listeners) {
-				listener.onStop(MP3Player.this);
-			}
+		for (MP3PlayerListener listener : listeners) {
+			listener.onStop(MP3Player.this);
 		}
 
 		_stop();
+	}
+
+	/**
+	 * Determines whether this player is stopped.
+	 * 
+	 * @return true if the player is stopped, false otherwise
+	 * 
+	 * @see #stop()
+	 */
+	public boolean isStopped() {
+		return isStopped;
 	}
 
 	private void _stop() {
@@ -317,7 +330,7 @@ public class MP3Player extends JPanel {
 	 * 
 	 * @see #play()
 	 */
-	public synchronized void skipForward() {
+	public void skipForward() {
 
 		if (shuffle) {
 			playIndex = random.nextInt(playList.size());
@@ -343,7 +356,7 @@ public class MP3Player extends JPanel {
 	 * 
 	 * @see #play()
 	 */
-	public synchronized void skipBackward() {
+	public void skipBackward() {
 
 		if (shuffle) {
 			playIndex = random.nextInt(playList.size());
@@ -364,37 +377,12 @@ public class MP3Player extends JPanel {
 	}
 
 	/**
-	 * Determines whether this player is paused.
-	 * 
-	 * @return true if the player is paused, false otherwise
-	 * 
-	 * @see #pause()
-	 */
-	public boolean isPaused() {
-		return isPaused;
-	}
-
-	/**
-	 * Determines whether this player is stopped.
-	 * 
-	 * @return true if the player is stopped, false otherwise
-	 * 
-	 * @see #stop()
-	 */
-	public boolean isStopped() {
-		return isStopped;
-	}
-
-	/**
 	 * Adds a {@link MP3PlayerListener} to the player.
 	 * 
 	 * @param listener
 	 *          the listener to be added
 	 */
-	public synchronized void addMP3PlayerListener(MP3PlayerListener listener) {
-		if (listeners == null) {
-			listeners = new ArrayList<MP3PlayerListener>();
-		}
+	public void addMP3PlayerListener(MP3PlayerListener listener) {
 		listeners.add(listener);
 	}
 
@@ -404,20 +392,15 @@ public class MP3Player extends JPanel {
 	 * @param listener
 	 *          the listener to be removed
 	 */
-	public synchronized void removeMP3PlayerListener(MP3PlayerListener listener) {
-		if (listeners != null) {
-			listeners.remove(listener);
-		}
+	public void removeMP3PlayerListener(MP3PlayerListener listener) {
+		listeners.remove(listener);
 	}
 
 	/**
 	 * Removes all of the {@link MP3PlayerListener} listeners from this player.
 	 */
-	public synchronized void removeAllMP3PlayerListeners() {
-		if (listeners != null) {
-			listeners.clear();
-			listeners = null;
-		}
+	public void removeAllMP3PlayerListeners() {
+		listeners.clear();
 	}
 
 	/**
@@ -465,15 +448,14 @@ public class MP3Player extends JPanel {
 	}
 
 	/**
-	 * Returns the actual volume of the player.
-	 */
-	public int getVolume() {
-		return volume;
-	}
-
-	/**
 	 * Sets the volume of the player. The value is actually the percent value, so
-	 * the value must be in interval [0..100].
+	 * the value must be in interval [0..100] or a runtime exception will be
+	 * throw.
+	 * 
+	 * @param volume
+	 * 
+	 * @throws RuntimeException
+	 *           if the volume is not in interval [0..100]
 	 */
 	public void setVolume(int volume) {
 
@@ -481,13 +463,36 @@ public class MP3Player extends JPanel {
 			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
 		}
 
-		if (listeners != null) {
-			for (MP3PlayerListener listener : listeners) {
-				listener.onSetVolume(MP3Player.this, volume);
-			}
+		for (MP3PlayerListener listener : listeners) {
+			listener.onSetVolume(MP3Player.this, volume);
 		}
 
 		this.volume = volume;
+	}
+
+	/**
+	 * Returns the actual volume of the player.
+	 */
+	public int getVolume() {
+		return volume;
+	}
+
+	/**
+	 * When you turn on shuffle, the next mp3 to play will be randomly chosen from
+	 * the play list.
+	 * 
+	 * @param shuffle
+	 *          true if shuffle should be turned on, or false for turning off
+	 * 
+	 * @see #isShuffle()
+	 */
+	public void setShuffle(boolean shuffle) {
+
+		for (MP3PlayerListener listener : listeners) {
+			listener.onSetShuffle(MP3Player.this, shuffle);
+		}
+
+		this.shuffle = shuffle;
 	}
 
 	/**
@@ -503,23 +508,22 @@ public class MP3Player extends JPanel {
 	}
 
 	/**
-	 * When you turn on shuffle, the next mp3 to play will be randomly chosen from
-	 * the play list.
+	 * When you turn on repeat, the player will practically never stop. After the
+	 * last mp3 from the play list will finish, the first will be automatically
+	 * played, or a random one if shuffle is on.
 	 * 
-	 * @param shuffle
-	 *          true if shuffle should be turned on, or false for turning off
+	 * @param repeat
+	 *          true if repeat should be turned on, or false for turning off
 	 * 
-	 * @see #isShuffle()
+	 * @see #isRepeat()
 	 */
-	public void setShuffle(boolean shuffle) {
+	public void setRepeat(boolean repeat) {
 
-		if (listeners != null) {
-			for (MP3PlayerListener listener : listeners) {
-				listener.onSetShuffle(MP3Player.this, shuffle);
-			}
+		for (MP3PlayerListener listener : listeners) {
+			listener.onSetRepeat(MP3Player.this, repeat);
 		}
 
-		this.shuffle = shuffle;
+		this.repeat = repeat;
 	}
 
 	/**
@@ -532,27 +536,6 @@ public class MP3Player extends JPanel {
 	 */
 	public boolean isRepeat() {
 		return repeat;
-	}
-
-	/**
-	 * When you turn on repeat, the player will practically never stop. After the
-	 * last mp3 from the play list will finish, the first will be automatically
-	 * played, or a random one if shuffle is on.
-	 * 
-	 * @param repeat
-	 *          true if repeat should be turned on, or false for turning off
-	 * 
-	 * @see #isRepeat()
-	 */
-	public void setRepeat(boolean repeat) {
-
-		if (listeners != null) {
-			for (MP3PlayerListener listener : listeners) {
-				listener.onSetRepeat(MP3Player.this, repeat);
-			}
-		}
-
-		this.repeat = repeat;
 	}
 
 }
