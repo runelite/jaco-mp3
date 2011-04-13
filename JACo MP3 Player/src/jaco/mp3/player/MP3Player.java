@@ -62,7 +62,11 @@ public class MP3Player extends JPanel {
 	public static void setDefaultUI(Class<? extends MP3PlayerUI> uiClass) {
 		UIManager.getDefaults().put(MP3Player.UI_CLASS_ID, uiClass.getName());
 	}
-	
+
+	/**
+	 * Sets the look and feel (L&F) class that renders the {@link MP3Player}
+	 * component.
+	 */
 	public static void setUIClass(Class<? extends MP3PlayerUI> uiClass) {
 		setDefaultUI(uiClass);
 	}
