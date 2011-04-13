@@ -41,7 +41,7 @@ import javax.swing.UIManager;
  * new MP3Player(new File(&quot;test.mp3&quot;)).play();
  * </pre>
  * 
- * @version 1.42, April 13, 2011
+ * @version 1.43, April 13, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 @SuppressWarnings("serial")
@@ -83,8 +83,6 @@ public class MP3Player extends JPanel {
 	//
 
 	private final Random random = new Random();
-
-	private volatile List<MP3PlayerListener> listeners = new Vector<MP3PlayerListener>();
 
 	private volatile List<URL> playList = new Vector<URL>();
 	private volatile int playIndex;
@@ -145,7 +143,7 @@ public class MP3Player extends JPanel {
 	 */
 	public void play() {
 
-		for (MP3PlayerListener listener : listeners) {
+		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onPlay(MP3Player.this);
 		}
 
@@ -261,7 +259,7 @@ public class MP3Player extends JPanel {
 	 */
 	public void pause() {
 
-		for (MP3PlayerListener listener : listeners) {
+		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onPause(MP3Player.this);
 		}
 
@@ -286,7 +284,7 @@ public class MP3Player extends JPanel {
 	 */
 	public void stop() {
 
-		for (MP3PlayerListener listener : listeners) {
+		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onStop(MP3Player.this);
 		}
 
@@ -383,7 +381,7 @@ public class MP3Player extends JPanel {
 	 *          the listener to be added
 	 */
 	public void addMP3PlayerListener(MP3PlayerListener listener) {
-		listeners.add(listener);
+		listenerList.add(MP3PlayerListener.class, listener);
 	}
 
 	/**
@@ -393,45 +391,57 @@ public class MP3Player extends JPanel {
 	 *          the listener to be removed
 	 */
 	public void removeMP3PlayerListener(MP3PlayerListener listener) {
-		listeners.remove(listener);
+		listenerList.remove(MP3PlayerListener.class, listener);
 	}
 
 	/**
-	 * Removes all of the {@link MP3PlayerListener} listeners from this player.
+	 * Returns an array of all the {@link MP3PlayerListener}s added to the player
+	 * with {@link #addMP3PlayerListener(MP3PlayerListener)}.
+	 * 
+	 * @return all of the {@link MP3PlayerListener}s added or an empty array if no
+	 *         listeners have been added
 	 */
-	public void removeAllMP3PlayerListeners() {
-		listeners.clear();
+	public MP3PlayerListener[] getMP3PlayerListeners() {
+		return (MP3PlayerListener[]) listenerList.getListeners(MP3PlayerListener.class);
 	}
 
 	/**
-	 * Appends the specified mp3 (as {@link URL} object) to the end of the play
-	 * list.
-	 * 
-	 * @param mp3
-	 *          the mp3 to be added
-	 * 
-	 * @see #addToPlayList(File)
-	 * @see #getPlayList()
+	 * Appends the specified url to the end of the play list.
 	 */
-	public void addToPlayList(URL mp3) {
-		this.playList.add(mp3);
-	}
-
-	/**
-	 * Appends the specified mp3 (as {@link File} object) to the end of the play
-	 * list.
-	 * 
-	 * @param mp3
-	 *          the mp3 to be added
-	 * 
-	 * @see #addToPlayList(URL)
-	 * @see #getPlayList()
-	 */
-	public void addToPlayList(File mp3) {
+	public void addToPlayList(URL url) {
 		try {
-			this.playList.add(mp3.toURI().toURL());
+			this.playList.add(url.toURI().toURL());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Appends the specified file (or all the files, recursively, if represents a
+	 * folder) to the end of the play list.
+	 */
+	public void addToPlayList(File file) {
+
+		if (file.isFile()) {
+
+			try {
+				this.playList.add(file.toURI().toURL());
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		else if (file.isDirectory()) {
+
+			File[] files = file.listFiles();
+
+			for (File file2 : files) {
+				addToPlayList(file2);
+			}
+		}
+
+		else {
+			throw new RuntimeException("WTF is this? ( " + file + " )");
 		}
 	}
 
@@ -463,7 +473,7 @@ public class MP3Player extends JPanel {
 			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
 		}
 
-		for (MP3PlayerListener listener : listeners) {
+		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onSetVolume(MP3Player.this, volume);
 		}
 
@@ -488,7 +498,7 @@ public class MP3Player extends JPanel {
 	 */
 	public void setShuffle(boolean shuffle) {
 
-		for (MP3PlayerListener listener : listeners) {
+		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onSetShuffle(MP3Player.this, shuffle);
 		}
 
@@ -519,7 +529,7 @@ public class MP3Player extends JPanel {
 	 */
 	public void setRepeat(boolean repeat) {
 
-		for (MP3PlayerListener listener : listeners) {
+		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onSetRepeat(MP3Player.this, repeat);
 		}
 

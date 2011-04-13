@@ -17,14 +17,16 @@
 
 package jaco.mp3.player;
 
+import java.util.EventListener;
+
 /**
  * The listener interface for handling player events.
  * 
- * @version 1.10, September 30, 2010
+ * @version 1.20, April 13, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 
-public interface MP3PlayerListener {
+public interface MP3PlayerListener extends EventListener {
 
 	/**
 	 * Invoked when player start playing.
