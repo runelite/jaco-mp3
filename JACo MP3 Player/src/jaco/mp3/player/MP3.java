@@ -179,12 +179,10 @@ public class MP3 {
 
 	public void pause() {
 		isPaused = true;
-		System.out.println("pause");
 	}
 
 	public void stop() {
 		isStopped = true;
-		System.out.println("stop");
 	}
 
 	/**
