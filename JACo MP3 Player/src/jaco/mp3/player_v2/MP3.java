@@ -55,8 +55,8 @@ public class MP3 {
 
 	private SourceDataLine source;
 
-	private volatile int volume = 100;
-	private volatile int sourceVolume = volume;
+	private volatile int volume = 25;
+	private volatile int sourceVolume = 0;
 
 	private volatile boolean isPaused = false;
 	private volatile boolean isStopped = true;
@@ -71,29 +71,6 @@ public class MP3 {
 
 	public MP3(URL url) {
 		this.url = url;
-	}
-
-	/**
-	 * Sets the volume for the source of this {@link MP3}. The value is actually
-	 * the percent value, so the value must be in interval [0..100] or a runtime
-	 * exception will be throw.
-	 * 
-	 * @param volume
-	 * 
-	 * @throws RuntimeException
-	 *           if the volume is not in interval [0..100]
-	 */
-	public void setVolume(int volume) {
-
-		if (volume < 0 || volume > 100) {
-			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
-		}
-
-		this.volume = volume;
-	}
-
-	public int getVolume() {
-		return volume;
 	}
 
 	public void play() {
@@ -163,6 +140,8 @@ public class MP3 {
 						source = (SourceDataLine) line;
 						source.open(format);
 						source.start();
+
+						setVolume(source, sourceVolume = 0);
 					}
 
 					SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frame, stream);
@@ -185,26 +164,9 @@ public class MP3 {
 							}
 						}
 
-						try {
-
-							FloatControl gainControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
-							BooleanControl muteControl = (BooleanControl) source.getControl(BooleanControl.Type.MUTE);
-
-							if (sourceVolume == 0) {
-								muteControl.setValue(true);
-							} else {
-								muteControl.setValue(false);
-								gainControl.setValue((float) (Math.log(sourceVolume / 100d) / Math.log(10.0) * 20.0));
-							}
-						}
-
-						catch (Exception e) {
-							LOGGER.log(Level.WARNING, "unable to set the volume to the source", e);
-						}
+						setVolume(source, sourceVolume);
 					}
 
-					System.out.println(sourceVolume);
-					
 					source.write(toByteArray(buffer, offs, len), 0, len * 2);
 
 					stream.closeFrame();
@@ -260,6 +222,49 @@ public class MP3 {
 
 	public boolean isStopped() {
 		return isStopped;
+	}
+
+	/**
+	 * Sets the volume for the source of this {@link MP3}. The value is actually
+	 * the percent value, so the value must be in interval [0..100] or a runtime
+	 * exception will be throw.
+	 * 
+	 * @param volume
+	 * 
+	 * @throws RuntimeException
+	 *           if the volume is not in interval [0..100]
+	 */
+	public void setVolume(int volume) {
+
+		if (volume < 0 || volume > 100) {
+			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
+		}
+
+		this.volume = volume;
+	}
+
+	public int getVolume() {
+		return volume;
+	}
+
+	private void setVolume(SourceDataLine source, int volume) {
+
+		try {
+
+			FloatControl gainControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
+			BooleanControl muteControl = (BooleanControl) source.getControl(BooleanControl.Type.MUTE);
+
+			if (volume == 0) {
+				muteControl.setValue(true);
+			} else {
+				muteControl.setValue(false);
+				gainControl.setValue((float) (Math.log(volume / 100d) / Math.log(10.0) * 20.0));
+			}
+		}
+
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "unable to set the volume to the source", e);
+		}
 	}
 
 	/**
