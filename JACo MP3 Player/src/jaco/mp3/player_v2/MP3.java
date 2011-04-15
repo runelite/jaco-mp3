@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jaco.mp3.player;
+package jaco.mp3.player_v2;
 
 import jaco.mp3.player.resources.Decoder;
 import jaco.mp3.player.resources.Frame;
@@ -53,12 +53,13 @@ public class MP3 {
 	private File file;
 	private URL url;
 
-	private int volume = 100;
-
-	private boolean isPaused = false;
-	private boolean isStopped = true;
-
 	private SourceDataLine source;
+
+	private volatile int volume = 100;
+	private volatile int sourceVolume = volume;
+
+	private volatile boolean isPaused = false;
+	private volatile boolean isStopped = true;
 
 	public MP3(String file) {
 		this(new File(file));
@@ -72,29 +73,23 @@ public class MP3 {
 		this.url = url;
 	}
 
+	/**
+	 * Sets the volume for the source of this {@link MP3}. The value is actually
+	 * the percent value, so the value must be in interval [0..100] or a runtime
+	 * exception will be throw.
+	 * 
+	 * @param volume
+	 * 
+	 * @throws RuntimeException
+	 *           if the volume is not in interval [0..100]
+	 */
 	public void setVolume(int volume) {
 
-		this.volume = volume;
-
-		if (source != null) {
-
-			try {
-
-				FloatControl gainControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
-				BooleanControl muteControl = (BooleanControl) source.getControl(BooleanControl.Type.MUTE);
-
-				if (volume == 0) {
-					muteControl.setValue(true);
-				} else {
-					muteControl.setValue(false);
-					gainControl.setValue((float) (Math.log(volume / 100d) / Math.log(10.0) * 20.0));
-				}
-			}
-
-			catch (Exception e) {
-				LOGGER.log(Level.WARNING, "unable to set the volume to the source", e);
-			}
+		if (volume < 0 || volume > 100) {
+			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
 		}
+
+		this.volume = volume;
 	}
 
 	public int getVolume() {
@@ -107,6 +102,8 @@ public class MP3 {
 			isPaused = false;
 			return;
 		}
+
+		LOGGER.log(Level.INFO, "play: " + toString());
 
 		isStopped = false;
 
@@ -138,6 +135,8 @@ public class MP3 {
 						source.flush();
 					}
 
+					sourceVolume = volume;
+
 					try {
 						Thread.sleep(10);
 					} catch (Exception e) {}
@@ -164,8 +163,6 @@ public class MP3 {
 						source = (SourceDataLine) line;
 						source.open(format);
 						source.start();
-
-						setVolume(volume);
 					}
 
 					SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frame, stream);
@@ -174,6 +171,40 @@ public class MP3 {
 					int offs = 0;
 					int len = output.getBufferLength();
 
+					if (sourceVolume != volume) {
+
+						if (sourceVolume > volume) {
+							sourceVolume -= 10;
+							if (sourceVolume < volume) {
+								sourceVolume = volume;
+							}
+						} else {
+							sourceVolume += 10;
+							if (sourceVolume > volume) {
+								sourceVolume = volume;
+							}
+						}
+
+						try {
+
+							FloatControl gainControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
+							BooleanControl muteControl = (BooleanControl) source.getControl(BooleanControl.Type.MUTE);
+
+							if (sourceVolume == 0) {
+								muteControl.setValue(true);
+							} else {
+								muteControl.setValue(false);
+								gainControl.setValue((float) (Math.log(sourceVolume / 100d) / Math.log(10.0) * 20.0));
+							}
+						}
+
+						catch (Exception e) {
+							LOGGER.log(Level.WARNING, "unable to set the volume to the source", e);
+						}
+					}
+
+					System.out.println(sourceVolume);
+					
 					source.write(toByteArray(buffer, offs, len), 0, len * 2);
 
 					stream.closeFrame();
@@ -185,16 +216,23 @@ public class MP3 {
 				}
 			}
 
-			if (!isStopped) {
-				source.drain();
-			} else {
-				source.flush();
+			//
+			// source is null at this point only if first frame is null
+			// this means that probably the file is not a mp3
+
+			if (source != null) {
+
+				if (!isStopped) {
+					source.drain();
+				} else {
+					source.flush();
+				}
+
+				source.stop();
+				source.close();
+
+				source = null;
 			}
-
-			source.stop();
-			source.close();
-
-			source = null;
 
 			try {
 				stream.close();
@@ -204,12 +242,24 @@ public class MP3 {
 		isStopped = true;
 	}
 
+	public boolean isPlaying() {
+		return !isPaused && !isStopped;
+	}
+
 	public void pause() {
 		isPaused = true;
 	}
 
+	public boolean isPaused() {
+		return isPaused;
+	}
+
 	public void stop() {
 		isStopped = true;
+	}
+
+	public boolean isStopped() {
+		return isStopped;
 	}
 
 	/**
