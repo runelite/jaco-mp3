@@ -39,7 +39,7 @@ import javax.sound.sampled.SourceDataLine;
 /**
  * Java MP3
  * 
- * @version 1.00, April 15, 2011
+ * @version 1.02, April 18, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 public class MP3 {
@@ -55,11 +55,11 @@ public class MP3 {
 
 	private SourceDataLine source;
 
-	private volatile int volume = 25;
-	private volatile int sourceVolume = 0;
-
 	private volatile boolean isPaused = false;
 	private volatile boolean isStopped = true;
+
+	private volatile int volume = 25;
+	private volatile int sourceVolume = 0;
 
 	public MP3(String file) {
 		this(new File(file));
@@ -73,14 +73,15 @@ public class MP3 {
 		this.url = url;
 	}
 
+	/**
+	 * Starts the play (or resume if is paused).
+	 */
 	public void play() {
 
 		if (isPaused) {
 			isPaused = false;
 			return;
 		}
-
-		LOGGER.log(Level.INFO, "play: " + toString());
 
 		isStopped = false;
 
@@ -182,7 +183,11 @@ public class MP3 {
 			// source is null at this point only if first frame is null
 			// this means that probably the file is not a mp3
 
-			if (source != null) {
+			if (source == null) {
+				LOGGER.log(Level.INFO, "source is null because first frame is null, so probably the file is not a mp3");
+			}
+
+			else {
 
 				if (!isStopped) {
 					source.drain();
@@ -202,6 +207,17 @@ public class MP3 {
 		}
 
 		isStopped = true;
+	}
+
+	/**
+	 * Starts the play (or resume if is paused) at the specified volume.
+	 * 
+	 * @see #setVolume(int)
+	 * @see #play()
+	 */
+	public void play(int volume) {
+		setVolume(volume);
+		play();
 	}
 
 	public boolean isPlaying() {
@@ -243,6 +259,9 @@ public class MP3 {
 		this.volume = volume;
 	}
 
+	/**
+	 * Returns the actual volume.
+	 */
 	public int getVolume() {
 		return volume;
 	}

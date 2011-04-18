@@ -96,7 +96,11 @@ public class MP3Player extends JPanel {
 	private volatile MP3 mp3;
 	private volatile Thread mp3Thread;
 
+	private volatile boolean isPaused = false;
+	private volatile boolean isStopped = true;
+
 	private volatile int volume;
+
 	private volatile boolean shuffle;
 	private volatile boolean repeat;
 
@@ -122,7 +126,7 @@ public class MP3Player extends JPanel {
 	}
 
 	protected void init() {
-		setVolume(25);
+		setVolume(55);
 		setShuffle(false);
 		setRepeat(true);
 	}
@@ -203,11 +207,25 @@ public class MP3Player extends JPanel {
 			listener.onPlay(MP3Player.this);
 		}
 
-		_stop();
 		_play();
 	}
 
 	private void _play() {
+
+		if (isPaused) {
+
+			isPaused = false;
+
+			if (mp3 != null) {
+				mp3.play(volume);
+			}
+
+			return;
+		}
+
+		_stop();
+
+		isStopped = false;
 
 		if (mp3 == null) {
 
@@ -218,21 +236,18 @@ public class MP3Player extends JPanel {
 			mp3 = playlist.get(0);
 		}
 
-		else if (mp3.isPaused()) {
-			mp3.play();
-			return;
-		}
-
 		mp3Thread = new Thread() {
 			public void run() {
 
-				System.out.println(volume);
-				mp3.setVolume(volume);
-				mp3.play();
+				mp3.play(volume);
 
-				// if (!isStopped) {
-				// skipForward();
-				// }
+				if (!isStopped) {
+					new Thread() {
+						public void run() {
+							skipForward();
+						}
+					}.start();
+				}
 			}
 		};
 		mp3Thread.start();
@@ -249,9 +264,16 @@ public class MP3Player extends JPanel {
 			listener.onPause(MP3Player.this);
 		}
 
+		_pause();
+	}
+
+	private void _pause() {
+
 		if (mp3 != null) {
 			mp3.pause();
 		}
+
+		isPaused = true;
 	}
 
 	/**
@@ -262,7 +284,7 @@ public class MP3Player extends JPanel {
 	 * @see #pause()
 	 */
 	public boolean isPaused() {
-		return mp3 != null && mp3.isPaused();
+		return isPaused;
 	}
 
 	/**
@@ -287,8 +309,12 @@ public class MP3Player extends JPanel {
 
 			try {
 				mp3Thread.join();
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+
+		isStopped = true;
 	}
 
 	/**
@@ -299,7 +325,7 @@ public class MP3Player extends JPanel {
 	 * @see #stop()
 	 */
 	public boolean isStopped() {
-		return mp3 == null || mp3.isStopped();
+		return isStopped;
 	}
 
 	/**
@@ -409,6 +435,10 @@ public class MP3Player extends JPanel {
 
 		for (MP3PlayerListener listener : getMP3PlayerListeners()) {
 			listener.onSetVolume(MP3Player.this, volume);
+		}
+
+		if (volume < 0 || volume > 100) {
+			throw new RuntimeException("Wrong value for volume, must be in interval [0..100].");
 		}
 
 		this.volume = volume;
