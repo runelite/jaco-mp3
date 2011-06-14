@@ -22,6 +22,8 @@ import jaco.mp3.resources.Frame;
 import jaco.mp3.resources.SampleBuffer;
 import jaco.mp3.resources.SoundStream;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
@@ -38,6 +40,12 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.SourceDataLine;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Java MP3 Player
@@ -45,7 +53,10 @@ import javax.sound.sampled.SourceDataLine;
  * @version 0.10.1, June 14, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
-public class MP3Player {
+public class MP3Player extends JPanel {
+
+  /** serialVersionUID */
+  private static final long serialVersionUID = 1L;
 
   private static final Logger LOGGER = Logger.getLogger(MP3Player.class.getName());
 
@@ -66,18 +77,114 @@ public class MP3Player {
   private volatile SourceDataLine playingSource;
   private volatile int playingSourceVolume = 0;
 
-  public MP3Player() {}
+  public MP3Player() {
+    init();
+  }
 
   public MP3Player(File... files) {
+
     for (File file : files) {
       add(file);
     }
+
+    init();
   }
 
   public MP3Player(URL... urls) {
+
     for (URL url : urls) {
       add(url);
     }
+
+    init();
+  }
+
+  private void init() {
+    new MP3PlayerTheme() {
+      public void apply(final MP3Player player) {
+
+        final JButton playButton = new JButton();
+        playButton.setText(">");
+        playButton.setToolTipText("Play");
+        playButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            player.play();
+          }
+        });
+
+        final JButton pauseButton = new JButton();
+        pauseButton.setText("||");
+        pauseButton.setToolTipText("Pause");
+        pauseButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            player.pause();
+          }
+        });
+
+        final JButton stopButton = new JButton();
+        stopButton.setText("#");
+        stopButton.setToolTipText("Stop");
+        stopButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            player.stop();
+          }
+        });
+
+        final JButton skipBackwardButton = new JButton();
+        skipBackwardButton.setText("|<");
+        skipBackwardButton.setToolTipText("Skip Backward");
+        skipBackwardButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            player.skipBackward();
+          }
+        });
+
+        final JButton skipForwardButton = new JButton();
+        skipForwardButton.setText(">|");
+        skipForwardButton.setToolTipText("Skip Forward");
+        skipForwardButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            player.skipForward();
+          }
+        });
+
+        final JSlider volumeSlider = new JSlider();
+        volumeSlider.setToolTipText("Volume");
+        volumeSlider.addChangeListener(new ChangeListener() {
+          public void stateChanged(ChangeEvent e) {
+            player.setVolume(volumeSlider.getValue());
+          }
+        });
+        volumeSlider.setMinimum(0);
+        volumeSlider.setMaximum(100);
+        volumeSlider.setMajorTickSpacing(50);
+        volumeSlider.setMinorTickSpacing(10);
+        volumeSlider.setPaintTicks(true);
+        volumeSlider.setPaintTrack(true);
+
+        final JCheckBox repeatCheckBox = new JCheckBox();
+        repeatCheckBox.setText("Repeat");
+        repeatCheckBox.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            player.setRepeat(repeatCheckBox.isSelected());
+          }
+        });
+
+        final JCheckBox shuffleCheckBox = new JCheckBox();
+        shuffleCheckBox.setText("Shuffle");
+        shuffleCheckBox.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            player.setShuffle(shuffleCheckBox.isSelected());
+          }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(player);
+        player.setLayout(layout);
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(playButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).addGroup(layout.createSequentialGroup().addComponent(pauseButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(stopButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipBackwardButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipForwardButton)).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(shuffleCheckBox).addComponent(repeatCheckBox)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(volumeSlider, 0, 0, Short.MAX_VALUE))).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(playButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(pauseButton).addComponent(stopButton).addComponent(skipBackwardButton).addComponent(skipForwardButton)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addGroup(layout.createSequentialGroup().addComponent(shuffleCheckBox).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(repeatCheckBox)).addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+
+      }
+    }.apply(this);
   }
 
   /**
@@ -130,6 +237,13 @@ public class MP3Player {
       playlist.add(url);
     }
     return this;
+  }
+
+  public void setTheme(MP3PlayerTheme theme) {
+    removeAll();
+    theme.apply(this);
+    revalidate();
+    repaint();
   }
 
   /**
@@ -307,12 +421,27 @@ public class MP3Player {
             }
           }
 
+          boolean skipForwardAllowed;
+
           synchronized (MP3Player.this) {
+
+            //
+            // take the value before reset
+
+            skipForwardAllowed = !isStopped;
+
+            //
+            // reset values
+
             isPaused = false;
             isStopped = true;
           }
 
           playingThread = null;
+
+          if (skipForwardAllowed) {
+            skipForward();
+          }
         }
       };
 
@@ -398,6 +527,8 @@ public class MP3Player {
       return;
     }
 
+    boolean playAllowed = true;
+
     if (shuffle) {
       playingIndex = random.nextInt(playlist.size());
     }
@@ -406,22 +537,26 @@ public class MP3Player {
 
       playingIndex += items;
 
-      if (repeat) {
-        if (playingIndex > playlist.size() - 1) {
+      if (playingIndex > playlist.size() - 1) {
+        if (repeat) {
           playingIndex = 0;
-        } else if (playingIndex < 0) {
+        } else {
           playingIndex = playlist.size() - 1;
+          playAllowed = false;
         }
-      } else {
-        if (playingIndex > playlist.size() - 1) {
+      } else if (playingIndex < 0) {
+        if (repeat) {
           playingIndex = playlist.size() - 1;
-        } else if (playingIndex < 0) {
+        } else {
           playingIndex = 0;
+          playAllowed = false;
         }
       }
     }
 
-    play();
+    if (playAllowed) {
+      play();
+    }
   }
 
   /**

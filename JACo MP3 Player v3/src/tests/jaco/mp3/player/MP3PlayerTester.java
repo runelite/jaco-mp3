@@ -4,26 +4,27 @@ import jaco.mp3.player.MP3Player;
 
 import java.io.File;
 
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+
 public class MP3PlayerTester {
 
-  public static void main(String[] args) {
-    // new MP3Player(new
-    // File("E:/Mp3/12. Raaban & Evana - Burn It Up-ES.mp3")).play();
-    // new MP3Player().add(new File("E:/Mp3"), false).play();
+  public static void main(String[] args) throws Exception {
 
-    final MP3Player player = new MP3Player();
-    player.add(new File("resources"), false).play();
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-    new Thread() {
-      public void run() {
-        try {
-          Thread.sleep(2000);
-        } catch (Exception e) {}
+    MP3Player player = new MP3Player();
+    player.add(new File("resources"), false);
 
-        System.out.println("skipForward");
-        player.skipForward();
-      }
-    }.start();
+    // player.play();
+
+    JFrame frame = new JFrame("MP3 Player");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.getContentPane().add(player);
+    frame.pack();
+    frame.setLocationRelativeTo(null);
+    frame.setVisible(true);
+
   }
 
 }
