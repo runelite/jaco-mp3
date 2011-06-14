@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jaco.mp3;
+package jaco.mp3.player;
 
 import jaco.mp3.resources.Decoder;
 import jaco.mp3.resources.Frame;
@@ -41,17 +41,17 @@ import javax.sound.sampled.SourceDataLine;
 /**
  * Java MP3
  * 
- * @version 1.1.0, June 09, 2011
+ * @version 0.10.1, June 14, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 public class MP3Player {
 
   private static final Logger LOGGER = Logger.getLogger(MP3Player.class.getName());
 
-  private List<Object> playlist = new ArrayList<Object>();
+  private volatile List<Object> playlist = new ArrayList<Object>();
 
-  private volatile boolean isPaused = false;
-  private volatile boolean isStopped = true;
+  private boolean isPaused = false;
+  private boolean isStopped = true;
 
   private volatile int volume = 50;
 
@@ -80,15 +80,12 @@ public class MP3Player {
    */
   public void play() {
 
-    if (isPaused) {
-
-      isPaused = false;
-
-      synchronized (MP3Player.this) {
+    synchronized (MP3Player.this) {
+      if (isPaused) {
+        isPaused = false;
         MP3Player.this.notifyAll();
+        return;
       }
-
-      return;
     }
 
     if (playingThread == null) {
@@ -96,7 +93,9 @@ public class MP3Player {
       playingThread = new Thread() {
         public void run() {
 
-          isStopped = false;
+          synchronized (MP3Player.this) {
+            isStopped = false;
+          }
 
           SoundStream stream;
 
@@ -109,7 +108,8 @@ public class MP3Player {
             } else if (playlistObject instanceof URL) {
               stream = new SoundStream(((URL) playlistObject).openStream());
             } else {
-              throw new Exception("this is impossible; how come the play list contains this kind of object? :: " + playlistObject.getClass());
+              LOGGER.log(Level.WARNING, "this is impossible; how come the play list contains this kind of object? :: " + playlistObject.getClass());
+              stream = null;
             }
           }
 
@@ -124,27 +124,28 @@ public class MP3Player {
 
             while (true) {
 
-              if (isStopped) {
-                break;
-              }
+              synchronized (MP3Player.this) {
 
-              if (isPaused) {
-
-                if (playingSource != null) {
-                  playingSource.flush();
+                if (isStopped) {
+                  break;
                 }
 
-                playingSourceVolume = volume;
+                if (isPaused) {
 
-                synchronized (MP3Player.this) {
+                  if (playingSource != null) {
+                    playingSource.flush();
+                  }
+
+                  playingSourceVolume = volume;
+
                   try {
                     MP3Player.this.wait();
                   } catch (InterruptedException e) {
                     LOGGER.log(Level.SEVERE, "wait() failed", e);
                   }
-                }
 
-                continue;
+                  continue;
+                }
               }
 
               try {
@@ -214,10 +215,12 @@ public class MP3Player {
 
             else {
 
-              if (!isStopped) {
-                playingSource.drain();
-              } else {
-                playingSource.flush();
+              synchronized (MP3Player.this) {
+                if (!isStopped) {
+                  playingSource.drain();
+                } else {
+                  playingSource.flush();
+                }
               }
 
               playingSource.stop();
@@ -228,25 +231,21 @@ public class MP3Player {
 
             try {
               stream.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+              LOGGER.log(Level.WARNING, "error closing the stream", e);
+            }
           }
 
-          isPaused = false;
-          isStopped = true;
+          synchronized (MP3Player.this) {
+            isPaused = false;
+            isStopped = true;
+          }
 
           playingThread = null;
         }
       };
 
       playingThread.start();
-    }
-  }
-
-  public void joinPlayThread() {
-    try {
-      playingThread.join();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
     }
   }
 
@@ -262,25 +261,28 @@ public class MP3Player {
   }
 
   public boolean isPlaying() {
-    return !isPaused && !isStopped;
+    synchronized (MP3Player.this) {
+      return !isPaused && !isStopped;
+    }
   }
 
   public void pause() {
-    isPaused = true;
     synchronized (MP3Player.this) {
+      isPaused = true;
       MP3Player.this.notifyAll();
     }
   }
 
   public boolean isPaused() {
-    return isPaused;
+    synchronized (MP3Player.this) {
+      return isPaused;
+    }
   }
 
   public void stop() {
 
-    isStopped = true;
-
     synchronized (MP3Player.this) {
+      isStopped = true;
       MP3Player.this.notifyAll();
     }
 
@@ -294,7 +296,9 @@ public class MP3Player {
   }
 
   public boolean isStopped() {
-    return isStopped;
+    synchronized (MP3Player.this) {
+      return isStopped;
+    }
   }
 
   /**

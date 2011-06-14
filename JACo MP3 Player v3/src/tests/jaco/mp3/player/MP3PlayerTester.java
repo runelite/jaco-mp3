@@ -1,6 +1,6 @@
-package tests.jaco.mp3;
+package tests.jaco.mp3.player;
 
-import jaco.mp3.MP3Player;
+import jaco.mp3.player.MP3Player;
 
 import java.io.File;
 
