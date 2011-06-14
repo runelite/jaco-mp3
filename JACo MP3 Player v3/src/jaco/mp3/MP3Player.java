@@ -25,6 +25,8 @@ import jaco.mp3.resources.SoundStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,31 +48,31 @@ public class MP3Player {
 
   private static final Logger LOGGER = Logger.getLogger(MP3Player.class.getName());
 
-  private File file;
-  private URL url;
+  private List<Object> playlist = new ArrayList<Object>();
 
   private volatile boolean isPaused = false;
   private volatile boolean isStopped = true;
 
-  private volatile int volume = 25;
+  private volatile int volume = 50;
 
-  private volatile boolean shuffle;
-  private volatile boolean repeat;
+  private volatile boolean shuffle = false;
+  private volatile boolean repeat = true;
 
   private volatile Thread playingThread;
+  private volatile int playingIndex = 0;
   private volatile SourceDataLine playingSource;
   private volatile int playingSourceVolume = 0;
 
-  public MP3Player(String file) {
-    this(new File(file));
+  public MP3Player(File... files) {
+    for (File file : files) {
+      playlist.add(file);
+    }
   }
 
-  public MP3Player(File file) {
-    this.file = file;
-  }
-
-  public MP3Player(URL url) {
-    this.url = url;
+  public MP3Player(URL... urls) {
+    for (URL url : urls) {
+      playlist.add(url);
+    }
   }
 
   /**
@@ -96,21 +98,29 @@ public class MP3Player {
 
           isStopped = false;
 
-          Decoder decoder = new Decoder();
-
-          SoundStream stream = null;
+          SoundStream stream;
 
           try {
-            if (file != null) {
-              stream = new SoundStream(new FileInputStream(file));
-            } else if (url != null) {
-              stream = new SoundStream(url.openStream());
+
+            Object playlistObject = playlist.get(playingIndex);
+
+            if (playlistObject instanceof File) {
+              stream = new SoundStream(new FileInputStream((File) playlistObject));
+            } else if (playlistObject instanceof URL) {
+              stream = new SoundStream(((URL) playlistObject).openStream());
+            } else {
+              throw new Exception("this is impossible; how come the play list contains this kind of object? :: " + playlistObject.getClass());
             }
-          } catch (Exception e) {
+          }
+
+          catch (Exception e) {
             LOGGER.log(Level.SEVERE, "unable to open the sound stream", e);
+            stream = null;
           }
 
           if (stream != null) {
+
+            Decoder decoder = new Decoder();
 
             while (true) {
 
@@ -388,18 +398,6 @@ public class MP3Player {
       pos = (int) (playingSource.getMicrosecondPosition() / 1000);
     }
     return pos;
-  }
-
-  @Override
-  public String toString() {
-
-    if (file != null) {
-      return file.getAbsolutePath();
-    } else if (url != null) {
-      return url.toString();
-    }
-
-    return super.toString();
   }
 
   private byte[] toByteArray(short[] ss, int offs, int len) {
