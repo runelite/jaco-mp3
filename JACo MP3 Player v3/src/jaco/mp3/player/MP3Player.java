@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +40,7 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.SourceDataLine;
 
 /**
- * Java MP3
+ * Java MP3 Player
  * 
  * @version 0.10.1, June 14, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
@@ -47,6 +48,8 @@ import javax.sound.sampled.SourceDataLine;
 public class MP3Player {
 
   private static final Logger LOGGER = Logger.getLogger(MP3Player.class.getName());
+
+  private final Random random = new Random();
 
   private List<Object> playlist = new ArrayList<Object>();
 
@@ -63,16 +66,70 @@ public class MP3Player {
   private volatile SourceDataLine playingSource;
   private volatile int playingSourceVolume = 0;
 
+  public MP3Player() {}
+
   public MP3Player(File... files) {
     for (File file : files) {
-      playlist.add(file);
+      add(file);
     }
   }
 
   public MP3Player(URL... urls) {
     for (URL url : urls) {
+      add(url);
+    }
+  }
+
+  /**
+   * Appends the specified file (or all the files, recursively only if
+   * specified, if represents a folder) to the end of the play list.
+   */
+  public MP3Player add(File file, boolean recursively) {
+
+    if (file.isFile()) {
+      if (file.getName().endsWith(".mp3")) {
+        synchronized (MP3Player.this) {
+          playlist.add(file);
+          System.out.println(file);
+        }
+      }
+    }
+
+    else if (file.isDirectory()) {
+
+      File[] files = file.listFiles();
+
+      for (File file2 : files) {
+        if (file2.isFile() || recursively) {
+          add(file2, recursively);
+        }
+      }
+    }
+
+    else {
+      throw new RuntimeException("WTF is this? ( " + file + " )");
+    }
+
+    return this;
+  }
+
+  /**
+   * Appends the specified file (or all the files, recursively, if represents a
+   * folder) to the end of the play list.
+   */
+  public MP3Player add(File file) {
+    add(file, true);
+    return this;
+  }
+
+  /**
+   * Appends the specified URL to the end of the play list.
+   */
+  public MP3Player add(URL url) {
+    synchronized (MP3Player.this) {
       playlist.add(url);
     }
+    return this;
   }
 
   /**
@@ -88,6 +145,8 @@ public class MP3Player {
       }
     }
 
+    stop();
+
     if (playingThread == null) {
 
       playingThread = new Thread() {
@@ -99,23 +158,35 @@ public class MP3Player {
 
           SoundStream stream;
 
-          try {
-
-            Object playlistObject = playlist.get(playingIndex);
-
-            if (playlistObject instanceof File) {
-              stream = new SoundStream(new FileInputStream((File) playlistObject));
-            } else if (playlistObject instanceof URL) {
-              stream = new SoundStream(((URL) playlistObject).openStream());
-            } else {
-              LOGGER.log(Level.WARNING, "this is impossible; how come the play list contains this kind of object? :: " + playlistObject.getClass());
-              stream = null;
-            }
+          if (playlist.size() == 0) {
+            LOGGER.log(Level.INFO, "play list is empty");
+            stream = null;
           }
 
-          catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "unable to open the sound stream", e);
-            stream = null;
+          else {
+
+            try {
+
+              Object playlistObject;
+
+              synchronized (MP3Player.this) {
+                playlistObject = playlist.get(playingIndex);
+              }
+
+              if (playlistObject instanceof File) {
+                stream = new SoundStream(new FileInputStream((File) playlistObject));
+              } else if (playlistObject instanceof URL) {
+                stream = new SoundStream(((URL) playlistObject).openStream());
+              } else {
+                LOGGER.log(Level.WARNING, "this is impossible; how come the play list contains this kind of object? :: " + playlistObject.getClass());
+                stream = null;
+              }
+            }
+
+            catch (Exception e) {
+              LOGGER.log(Level.SEVERE, "unable to open the sound stream", e);
+              stream = null;
+            }
           }
 
           if (stream != null) {
@@ -299,6 +370,58 @@ public class MP3Player {
     synchronized (MP3Player.this) {
       return isStopped;
     }
+  }
+
+  /**
+   * Forces the player to play next mp3 in the play list (or random if shuffle
+   * is turned on).
+   * 
+   * @see #play()
+   */
+  public void skipForward() {
+    _skip(1);
+  }
+
+  /**
+   * Forces the player to play previous mp3 in the play list (or random if
+   * shuffle is turned on).
+   * 
+   * @see #play()
+   */
+  public void skipBackward() {
+    _skip(-1);
+  }
+
+  private void _skip(int items) {
+
+    if (playlist.size() == 0) {
+      return;
+    }
+
+    if (shuffle) {
+      playingIndex = random.nextInt(playlist.size());
+    }
+
+    else {
+
+      playingIndex += items;
+
+      if (repeat) {
+        if (playingIndex > playlist.size() - 1) {
+          playingIndex = 0;
+        } else if (playingIndex < 0) {
+          playingIndex = playlist.size() - 1;
+        }
+      } else {
+        if (playingIndex > playlist.size() - 1) {
+          playingIndex = playlist.size() - 1;
+        } else if (playingIndex < 0) {
+          playingIndex = 0;
+        }
+      }
+    }
+
+    play();
   }
 
   /**
