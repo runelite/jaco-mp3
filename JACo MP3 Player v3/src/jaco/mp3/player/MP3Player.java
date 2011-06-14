@@ -48,7 +48,7 @@ public class MP3Player {
 
   private static final Logger LOGGER = Logger.getLogger(MP3Player.class.getName());
 
-  private volatile List<Object> playlist = new ArrayList<Object>();
+  private List<Object> playlist = new ArrayList<Object>();
 
   private boolean isPaused = false;
   private boolean isStopped = true;
