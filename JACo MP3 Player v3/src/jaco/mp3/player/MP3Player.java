@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,24 +56,29 @@ public class MP3Player extends JPanel {
 
   private static final Logger LOGGER = Logger.getLogger(MP3Player.class.getName());
 
-  private final Random random = new Random();
+  private static final Random RANDOM = new Random();
 
   private List<Object> playlist = new ArrayList<Object>();
 
-  private boolean isPaused = false;
-  private boolean isStopped = true;
+  private transient boolean isPaused = false;
+  private transient boolean isStopped = true;
 
-  private volatile int volume = 50;
+  private transient volatile int volume = 50;
 
-  private volatile boolean shuffle = false;
-  private volatile boolean repeat = true;
+  private transient volatile boolean shuffle = false;
+  private transient volatile boolean repeat = true;
 
-  private transient volatile Thread playingThread;
+  private transient volatile Thread playingThread = null;
   private transient volatile int playingIndex = 0;
-  private transient volatile SourceDataLine playingSource;
+  private transient volatile SourceDataLine playingSource = null;
   private transient volatile int playingSourceVolume = 0;
 
   public MP3Player() {
+    init();
+  }
+
+  public MP3Player(File file) {
+    add(file);
     init();
   }
 
@@ -82,6 +88,11 @@ public class MP3Player extends JPanel {
       add(file);
     }
 
+    init();
+  }
+
+  public MP3Player(URL url) {
+    add(url);
     init();
   }
 
@@ -175,14 +186,14 @@ public class MP3Player extends JPanel {
       return;
     }
 
+    synchronized (MP3Player.this) {
+      isStopped = false;
+    }
+
     if (playingThread == null) {
 
       playingThread = new Thread() {
         public void run() {
-
-          synchronized (MP3Player.this) {
-            isStopped = false;
-          }
 
           InputStream inputStream = null;
 
@@ -361,17 +372,6 @@ public class MP3Player extends JPanel {
     }
   }
 
-  /**
-   * Starts the play (or resume if is paused) at the specified volume.
-   * 
-   * @see #setVolume(int)
-   * @see #play()
-   */
-  public void play(int volume) {
-    setVolume(volume);
-    play();
-  }
-
   public boolean isPlaying() {
     synchronized (MP3Player.this) {
       return !isPaused && !isStopped;
@@ -379,6 +379,11 @@ public class MP3Player extends JPanel {
   }
 
   public void pause() {
+
+    if (!isPlaying()) {
+      return;
+    }
+
     synchronized (MP3Player.this) {
       isPaused = true;
       MP3Player.this.notifyAll();
@@ -394,6 +399,7 @@ public class MP3Player extends JPanel {
   public void stop() {
 
     synchronized (MP3Player.this) {
+      isPaused = false;
       isStopped = true;
       MP3Player.this.notifyAll();
     }
@@ -420,7 +426,7 @@ public class MP3Player extends JPanel {
    * @see #play()
    */
   public void skipForward() {
-    _skip(1);
+    skip(1);
   }
 
   /**
@@ -430,19 +436,19 @@ public class MP3Player extends JPanel {
    * @see #play()
    */
   public void skipBackward() {
-    _skip(-1);
+    skip(-1);
   }
 
-  private void _skip(int items) {
+  private void skip(int items) {
 
     if (playlist.size() == 0) {
       return;
     }
 
-    boolean playAllowed = true;
+    boolean playAllowed = isPlaying();
 
     if (shuffle) {
-      playingIndex = random.nextInt(playlist.size());
+      playingIndex = RANDOM.nextInt(playlist.size());
     }
 
     else {
@@ -466,6 +472,8 @@ public class MP3Player extends JPanel {
       }
     }
 
+    stop();
+
     if (playAllowed) {
       play();
     }
@@ -481,13 +489,15 @@ public class MP3Player extends JPanel {
    * @throws IllegalArgumentException
    *           if the volume is not in interval [0..100]
    */
-  public void setVolume(int volume) {
+  public MP3Player setVolume(int volume) {
 
     if (volume < 0 || volume > 100) {
       throw new IllegalArgumentException("Wrong value for volume, must be in interval [0..100].");
     }
 
     this.volume = volume;
+
+    return this;
   }
 
   /**
@@ -504,8 +514,11 @@ public class MP3Player extends JPanel {
    * @param shuffle
    *          true if shuffle should be turned on, or false for turning off
    */
-  public void setShuffle(boolean shuffle) {
+  public MP3Player setShuffle(boolean shuffle) {
+
     this.shuffle = shuffle;
+
+    return this;
   }
 
   /**
@@ -526,8 +539,11 @@ public class MP3Player extends JPanel {
    * @param repeat
    *          true if repeat should be turned on, or false for turning off
    */
-  public void setRepeat(boolean repeat) {
+  public MP3Player setRepeat(boolean repeat) {
+
     this.repeat = repeat;
+
+    return this;
   }
 
   /**
@@ -584,6 +600,10 @@ public class MP3Player extends JPanel {
       bb[idx++] = (byte) (s >>> 8);
     }
     return bb;
+  }
+
+  private void readObject(ObjectInputStream objectInputStream) throws ClassNotFoundException, IOException {
+    objectInputStream.defaultReadObject();
   }
 
 }
