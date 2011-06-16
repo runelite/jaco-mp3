@@ -22,10 +22,10 @@ import jaco.mp3.resources.Frame;
 import jaco.mp3.resources.SampleBuffer;
 import jaco.mp3.resources.SoundStream;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +40,12 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.SourceDataLine;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * Java MP3 Player
  * 
- * @version 0.10.1, June 14, 2011
+ * @version 0.10.2, June 16, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
 public class MP3Player extends JPanel {
@@ -72,10 +67,10 @@ public class MP3Player extends JPanel {
   private volatile boolean shuffle = false;
   private volatile boolean repeat = true;
 
-  private volatile Thread playingThread;
-  private volatile int playingIndex = 0;
-  private volatile SourceDataLine playingSource;
-  private volatile int playingSourceVolume = 0;
+  private transient volatile Thread playingThread;
+  private transient volatile int playingIndex = 0;
+  private transient volatile SourceDataLine playingSource;
+  private transient volatile int playingSourceVolume = 0;
 
   public MP3Player() {
     init();
@@ -100,91 +95,7 @@ public class MP3Player extends JPanel {
   }
 
   private void init() {
-    new MP3PlayerTheme() {
-      public void apply(final MP3Player player) {
-
-        final JButton playButton = new JButton();
-        playButton.setText(">");
-        playButton.setToolTipText("Play");
-        playButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            player.play();
-          }
-        });
-
-        final JButton pauseButton = new JButton();
-        pauseButton.setText("||");
-        pauseButton.setToolTipText("Pause");
-        pauseButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            player.pause();
-          }
-        });
-
-        final JButton stopButton = new JButton();
-        stopButton.setText("#");
-        stopButton.setToolTipText("Stop");
-        stopButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            player.stop();
-          }
-        });
-
-        final JButton skipBackwardButton = new JButton();
-        skipBackwardButton.setText("|<");
-        skipBackwardButton.setToolTipText("Skip Backward");
-        skipBackwardButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            player.skipBackward();
-          }
-        });
-
-        final JButton skipForwardButton = new JButton();
-        skipForwardButton.setText(">|");
-        skipForwardButton.setToolTipText("Skip Forward");
-        skipForwardButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            player.skipForward();
-          }
-        });
-
-        final JSlider volumeSlider = new JSlider();
-        volumeSlider.setToolTipText("Volume");
-        volumeSlider.addChangeListener(new ChangeListener() {
-          public void stateChanged(ChangeEvent e) {
-            player.setVolume(volumeSlider.getValue());
-          }
-        });
-        volumeSlider.setMinimum(0);
-        volumeSlider.setMaximum(100);
-        volumeSlider.setMajorTickSpacing(50);
-        volumeSlider.setMinorTickSpacing(10);
-        volumeSlider.setPaintTicks(true);
-        volumeSlider.setPaintTrack(true);
-
-        final JCheckBox repeatCheckBox = new JCheckBox();
-        repeatCheckBox.setText("Repeat");
-        repeatCheckBox.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            player.setRepeat(repeatCheckBox.isSelected());
-          }
-        });
-
-        final JCheckBox shuffleCheckBox = new JCheckBox();
-        shuffleCheckBox.setText("Shuffle");
-        shuffleCheckBox.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            player.setShuffle(shuffleCheckBox.isSelected());
-          }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(player);
-        player.setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(playButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).addGroup(layout.createSequentialGroup().addComponent(pauseButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(stopButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipBackwardButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(skipForwardButton)).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(shuffleCheckBox).addComponent(repeatCheckBox)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(volumeSlider, 0, 0, Short.MAX_VALUE))).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(playButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(pauseButton).addComponent(stopButton).addComponent(skipBackwardButton).addComponent(skipForwardButton)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addGroup(layout.createSequentialGroup().addComponent(shuffleCheckBox).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(repeatCheckBox)).addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-
-      }
-    }.apply(this);
+    new MP3PlayerThemeDefault().apply(this);
   }
 
   /**
@@ -197,7 +108,6 @@ public class MP3Player extends JPanel {
       if (file.getName().endsWith(".mp3")) {
         synchronized (MP3Player.this) {
           playlist.add(file);
-          System.out.println(file);
         }
       }
     }
@@ -214,7 +124,7 @@ public class MP3Player extends JPanel {
     }
 
     else {
-      throw new RuntimeException("WTF is this? ( " + file + " )");
+      throw new IllegalArgumentException("WTF is this? ( " + file + " )");
     }
 
     return this;
@@ -261,6 +171,10 @@ public class MP3Player extends JPanel {
 
     stop();
 
+    if (playlist.size() == 0) {
+      return;
+    }
+
     if (playingThread == null) {
 
       playingThread = new Thread() {
@@ -270,41 +184,25 @@ public class MP3Player extends JPanel {
             isStopped = false;
           }
 
-          SoundStream stream;
+          InputStream inputStream = null;
 
-          if (playlist.size() == 0) {
-            LOGGER.log(Level.INFO, "play list is empty");
-            stream = null;
-          }
+          try {
 
-          else {
+            Object playlistObject;
 
-            try {
-
-              Object playlistObject;
-
-              synchronized (MP3Player.this) {
-                playlistObject = playlist.get(playingIndex);
-              }
-
-              if (playlistObject instanceof File) {
-                stream = new SoundStream(new FileInputStream((File) playlistObject));
-              } else if (playlistObject instanceof URL) {
-                stream = new SoundStream(((URL) playlistObject).openStream());
-              } else {
-                LOGGER.log(Level.WARNING, "this is impossible; how come the play list contains this kind of object? :: " + playlistObject.getClass());
-                stream = null;
-              }
+            synchronized (MP3Player.this) {
+              playlistObject = playlist.get(playingIndex);
             }
 
-            catch (Exception e) {
-              LOGGER.log(Level.SEVERE, "unable to open the sound stream", e);
-              stream = null;
+            if (playlistObject instanceof File) {
+              inputStream = new FileInputStream((File) playlistObject);
+            } else if (playlistObject instanceof URL) {
+              inputStream = ((URL) playlistObject).openStream();
+            } else {
+              throw new IOException("this is impossible; how come the play list contains this kind of object? :: " + playlistObject.getClass());
             }
-          }
 
-          if (stream != null) {
-
+            SoundStream soundStream = new SoundStream(inputStream);
             Decoder decoder = new Decoder();
 
             while (true) {
@@ -335,7 +233,7 @@ public class MP3Player extends JPanel {
 
               try {
 
-                Frame frame = stream.readFrame();
+                Frame frame = soundStream.readFrame();
 
                 if (frame == null) {
                   break;
@@ -356,7 +254,7 @@ public class MP3Player extends JPanel {
                   setVolume(playingSource, playingSourceVolume = 0);
                 }
 
-                SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frame, stream);
+                SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frame, soundStream);
 
                 short[] buffer = output.getBuffer();
                 int offs = 0;
@@ -381,7 +279,7 @@ public class MP3Player extends JPanel {
 
                 playingSource.write(toByteArray(buffer, offs, len), 0, len * 2);
 
-                stream.closeFrame();
+                soundStream.closeFrame();
               }
 
               catch (Exception e) {
@@ -415,9 +313,23 @@ public class MP3Player extends JPanel {
             }
 
             try {
-              stream.close();
+              soundStream.close();
             } catch (Exception e) {
-              LOGGER.log(Level.WARNING, "error closing the stream", e);
+              LOGGER.log(Level.WARNING, "error closing the sound stream", e);
+            }
+          }
+
+          catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "unable to open the input stream", e);
+          }
+
+          finally {
+            if (inputStream != null) {
+              try {
+                inputStream.close();
+              } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "error closing the input stream", e);
+              }
             }
           }
 

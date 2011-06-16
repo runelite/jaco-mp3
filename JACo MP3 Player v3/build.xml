@@ -15,37 +15,7 @@
 		<mkdir dir="${dist.dir}" />
 
 
-		<jar basedir="bin" destfile="${dist.dir}/${project.jar}" />
-
-
-		<delete dir="${dist.tmp.dir}" />
-		<mkdir dir="${dist.tmp.dir}" />
-		<mkdir dir="${dist.tmp.dir}/injars" />
-		<mkdir dir="${dist.tmp.dir}/libraryjars" />
-		<mkdir dir="${dist.tmp.dir}/outjars" />
-
-		<move todir="${dist.tmp.dir}/injars">
-			<fileset file="${dist.dir}/${project.jar}" />
-		</move>
-
-		<copy file="obfuscator.pro" tofile="obfuscator.pro.tmp" />
-
-		<replace file="obfuscator.pro.tmp" token="xXx_dir_xXx" value="${dist.tmp.dir}" />
-
-		<exec executable="java.exe">
-			<arg value="-jar" />
-			<arg value="d:/Program Files/proguard4.6/lib/proguard.jar" />
-			<arg value="@obfuscator.pro.tmp" />
-		</exec>
-
-		<delete file="obfuscator.pro.tmp" />
-
-		<move todir="${dist.dir}">
-			<fileset dir="${dist.tmp.dir}/outjars" />
-			<fileset dir="${dist.tmp.dir}/libraryjars" />
-		</move>
-
-		<delete dir="${dist.tmp.dir}" />
+		<jar basedir="bin" destfile="${dist.dir}/${project.jar}" excludes="tests/**" />
 
 
 	</target>
