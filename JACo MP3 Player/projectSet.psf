@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<psf version="2.0">
-<provider id="org.tigris.subversion.subclipse.core.svnnature">
-<project reference="0.9.3,https://jacoimage.svn.sourceforge.net/svnroot/jacoimage/JACo%20Image,JACo Image"/>
-<project reference="0.9.3,https://jacomp3player.svn.sourceforge.net/svnroot/jacomp3player/JACo%20MP3%20Player,JACo MP3 Player"/>
-<project reference="0.9.3,https://jacomp3player.svn.sourceforge.net/svnroot/jacomp3player/JACo%20MP3%20Player%20Resources,JACo MP3 Player Resources"/>
-<project reference="0.9.3,https://jacomp3player.svn.sourceforge.net/svnroot/jacomp3player/JACo%20MP3%20Player%20Tests,JACo MP3 Player Tests"/>
-</provider>
-</psf>
