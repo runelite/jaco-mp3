@@ -5,42 +5,13 @@
 	<property name="version" value="0.10.2" />
 
 	<property name="dist.dir" location="${basedir}${file.separator}dist" />
-
-	<property name="dist.tmp.dir" location="${dist.dir}${file.separator}tmp" />
-	<property name="dist.tmp.name-version.dir" location="${dist.tmp.dir}${file.separator}${name}-${version}" />
-	<property name="dist.tmp.name-version.lib.dir" location="${dist.tmp.name-version.dir}${file.separator}lib" />
-	<property name="dist.jar" location="${dist.tmp.name-version.lib.dir}${file.separator}${name}-${version}.jar" />
-
-	<property name="dist.zip" location="${dist.dir}${file.separator}${name}-${version}.zip" />
-
+	<property name="dist.jar" location="${dist.dir}${file.separator}${name}-${version}.jar" />
 
 	<target name="main">
-
-
-		<delete dir="${dist.tmp.dir}" />
-		<mkdir dir="${dist.tmp.name-version.dir}" />
-		<mkdir dir="${dist.tmp.name-version.lib.dir}" />
-
+		<mkdir dir="bin" />
+		<javac srcdir="src" destdir="bin" excludes="tests${file.separator}**" />
 
 		<jar basedir="bin" destfile="${dist.jar}" excludes="tests${file.separator}**" />
-
-
-		<copy todir="${dist.tmp.name-version.dir}">
-			<fileset dir="${basedir}">
-				<include name="src${file.separator}**" />
-				<exclude name="src${file.separator}tests${file.separator}**" />
-			</fileset>
-			<fileset dir="${basedir}" includes="README.txt" />
-		</copy>
-
-
-		<delete file="${dist.zip}" />
-		<zip basedir="${dist.tmp.dir}" destfile="${dist.zip}" />
-
-
-		<delete dir="${dist.tmp.dir}" />
-
-
 	</target>
 
 
