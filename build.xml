@@ -2,7 +2,7 @@
 
 
 	<property name="name" value="jaco-mp3-player" />
-	<property name="version" value="0.10.2" />
+	<property name="version" value="0.10.2-rl1" />
 
 	<property name="dist.dir" location="${basedir}${file.separator}dist" />
 	<property name="dist.jar" location="${dist.dir}${file.separator}${name}-${version}.jar" />
