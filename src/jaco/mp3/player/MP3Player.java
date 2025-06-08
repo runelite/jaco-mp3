@@ -179,7 +179,7 @@ public class MP3Player {
 
     if (playingThread == null) {
 
-      playingThread = new Thread() {
+      playingThread = new Thread("MP3 Player") {
         public void run() {
 
           InputStream inputStream = null;
