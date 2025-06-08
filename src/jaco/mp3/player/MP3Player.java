@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,6 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.SourceDataLine;
-import javax.swing.JPanel;
 
 /**
  * Java MP3 Player
@@ -49,10 +47,7 @@ import javax.swing.JPanel;
  * @version 0.10.2, June 16, 2011
  * @author Cristian Sulea ( http://cristiansulea.entrust.ro )
  */
-public class MP3Player extends JPanel {
-
-  /** serialVersionUID */
-  private static final long serialVersionUID = 1L;
+public class MP3Player {
 
   private static final Logger LOGGER = Logger.getLogger(MP3Player.class.getName());
 
@@ -106,7 +101,6 @@ public class MP3Player extends JPanel {
   }
 
   private void init() {
-    new MP3PlayerThemeDefault().apply(this);
   }
 
   /**
@@ -158,13 +152,6 @@ public class MP3Player extends JPanel {
       playlist.add(url);
     }
     return this;
-  }
-
-  public void setTheme(MP3PlayerTheme theme) {
-    removeAll();
-    theme.apply(this);
-    revalidate();
-    repaint();
   }
 
   /**
@@ -600,10 +587,6 @@ public class MP3Player extends JPanel {
       bb[idx++] = (byte) (s >>> 8);
     }
     return bb;
-  }
-
-  private void readObject(ObjectInputStream objectInputStream) throws ClassNotFoundException, IOException {
-    objectInputStream.defaultReadObject();
   }
 
   public void clearPlayList() {
