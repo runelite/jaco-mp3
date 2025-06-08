@@ -606,4 +606,9 @@ public class MP3Player extends JPanel {
     objectInputStream.defaultReadObject();
   }
 
+  public void clearPlayList() {
+    synchronized (this) {
+      playlist.clear();
+    }
+  }
 }
