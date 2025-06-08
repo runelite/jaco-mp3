@@ -26,7 +26,7 @@ package jaco.mp3.resources;
  * 
  * @author MDM
  */
-public class DecoderException extends JavaLayerException
+public class DecoderException extends Exception
 	implements DecoderErrors
 {	
 	private int		errorcode = UNKNOWN_ERROR;
@@ -48,7 +48,7 @@ public class DecoderException extends JavaLayerException
 	}
 	
 	
-	static public String getErrorString(int errorcode)
+	static String getErrorString(int errorcode)
 	{
 		// REVIEW: use resource file to map error codes
 		// to locale-sensitive strings. 

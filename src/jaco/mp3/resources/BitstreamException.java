@@ -37,7 +37,7 @@ package jaco.mp3.resources;
  * @author MDM	12/12/99
  */
 
-public class BitstreamException extends JavaLayerException
+public class BitstreamException extends Exception
 	implements BitstreamErrors
 {	
 	private int errorcode = UNKNOWN_ERROR;
@@ -59,7 +59,7 @@ public class BitstreamException extends JavaLayerException
 	}
 	
 	
-	static public String getErrorString(int errorcode)
+	static String getErrorString(int errorcode)
 	{
 		// REVIEW: use resource bundle to map error codes
 		// to locale-sensitive strings.
